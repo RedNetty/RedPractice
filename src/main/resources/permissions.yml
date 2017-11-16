@@ -1,28 +1,28 @@
 Default:
   prefix: '&6'
   permission:
-  - none
+  - practice.globalchat
 Sub:
   prefix: '&a&lS'
   permission:
-  - none
+  - practice.globalchat
 Sub+:
   prefix: '6&lS+'
   permission:
-  - none
+  - practice.globalchat
 Sub++:
   prefix: '&3&lS++'
   permission:
-  - none
+  - practice.globalchat
 Supporter:
   prefix: '&d&lSUPPORTER'
   permission:
-  - none
+  - practice.globalchat
 PMOD:
   prefix: '&f&lPMOD'
   permission:
-  - none
+  - practice.globalchat
 GM:
   prefix: '&b&lGM'
   permission:
-  - practice.reload
+  - practice.globalchat

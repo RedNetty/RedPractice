@@ -8,3 +8,6 @@ commands:
     permission: practice.reload
   setrank:
     permission: practice.setrank
+  gl:
+    aliases: <global>
+    permission: practice.globalchat

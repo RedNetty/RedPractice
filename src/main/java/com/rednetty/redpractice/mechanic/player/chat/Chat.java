@@ -40,7 +40,7 @@ public class Chat extends Mechanics implements Listener {
      * @param message    - The message the sender sent
      * @param itemStack  - ItemStack the sender is trying to show
      */
-    public void sendShowMessage(Player sender, Set<Player> recipients, String prefix, String message, ItemStack itemStack) {
+    public static void sendShowMessage(Player sender, Set<Player> recipients, String prefix, String message, ItemStack itemStack) {
         if (itemStack != null && itemStack.getType() != Material.AIR) {
             String[] splitMessage = message.split("@i@");
             String beforeItem = "";
@@ -55,7 +55,7 @@ public class Chat extends Mechanics implements Listener {
             itemString.add(itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : itemStack.getType().name());
             if(itemMeta.hasLore()) itemMeta.getLore().forEach(lore -> itemString.add(lore));
             /*Starts making the Json Message*/
-            JSONMessage jsonMessage = new JSONMessage(prefix + ChatColor.GRAY + sender.getName() + ": ");
+            JSONMessage jsonMessage = new JSONMessage(ChatColor.translateAlternateColorCodes('&', prefix + ChatColor.GRAY + sender.getName() + ": "));
             jsonMessage.addText(beforeItem);
             jsonMessage.addHoverText(itemString, ChatColor.translateAlternateColorCodes('&', "&f&l&nSHOW"));
             jsonMessage.addText(afterItem);
