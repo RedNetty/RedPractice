@@ -1,0 +1,10 @@
+name: RedPractice
+author: RedNetty
+main: com.rednetty.redpractice.RedPractice
+version: 1.0
+
+commands:
+  practicereload:
+    permission: practice.reload
+  setrank:
+    permission: practice.setrank

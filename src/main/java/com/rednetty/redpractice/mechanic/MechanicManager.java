@@ -1,6 +1,8 @@
 package com.rednetty.redpractice.mechanic;
 
+import com.rednetty.redpractice.mechanic.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
+import com.rednetty.redpractice.mechanic.player.chat.Chat;
 import lombok.Getter;
 
 import java.util.stream.Stream;
@@ -9,6 +11,10 @@ public class MechanicManager {
 
     @Getter
     private PlayerHandler playerHandler;
+    @Getter
+    private Chat chat;
+    @Getter
+    private ModerationHandler moderationHandler;
 
 
     /**
@@ -17,7 +23,9 @@ public class MechanicManager {
      */
     public void init() {
         Stream.of(
-                playerHandler = new PlayerHandler()
+                playerHandler = new PlayerHandler(),
+                moderationHandler = new ModerationHandler(),
+                chat = new Chat()
         ).forEach(manager -> manager.onEnable());
     }
 
@@ -27,7 +35,9 @@ public class MechanicManager {
      */
     public void stop() {
         Stream.of(
-                playerHandler
-        ).forEach(manager -> manager.onEnable());
+                playerHandler,
+                moderationHandler,
+                chat
+        ).forEach(manager -> manager.onDisable());
     }
 }

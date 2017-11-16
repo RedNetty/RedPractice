@@ -1,0 +1,28 @@
+Default:
+  prefix: '&6'
+  permission:
+  - none
+Sub:
+  prefix: '&a&lS'
+  permission:
+  - none
+Sub+:
+  prefix: '6&lS+'
+  permission:
+  - none
+Sub++:
+  prefix: '&3&lS++'
+  permission:
+  - none
+Supporter:
+  prefix: '&d&lSUPPORTER'
+  permission:
+  - none
+PMOD:
+  prefix: '&f&lPMOD'
+  permission:
+  - none
+GM:
+  prefix: '&b&lGM'
+  permission:
+  - practice.reload

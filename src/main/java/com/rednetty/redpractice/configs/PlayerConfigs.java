@@ -7,14 +7,16 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class PlayerConfigs {
 
     @Getter
-    private static HashMap<Player, FileConfiguration> playerFileConfigMap = new HashMap<>();
+    private static HashMap<UUID, FileConfiguration> playerFileConfigMap = new HashMap<>();
 
-    public void setupConfig() {
+    public static void setupConfig() {
         File file = new File(RedPractice.getInstance().getDataFolder(), "PlayerData");
         if (!file.exists()) {
             file.mkdirs();
@@ -22,21 +24,32 @@ public class PlayerConfigs {
     }
 
 
-    public static void setupPlayerConfig(Player player) {
-        File file = new File(RedPractice.getInstance().getDataFolder() + "/PlayerData", player.getName() + ".yml");
+    public static void setupPlayerConfig(UUID playerID) {
+        File file = new File(RedPractice.getInstance().getDataFolder() + "/PlayerData", playerID.toString() + ".yml");
         if (!file.exists()) {
-            file.mkdirs();
+            try {
+                file.createNewFile();
+            }catch(IOException e) {
+                e.printStackTrace();
+            }
         }
-        playerFileConfigMap.put(player, YamlConfiguration.loadConfiguration(file));
+        playerFileConfigMap.put(playerID, YamlConfiguration.loadConfiguration(file));
     }
 
 
-    public static FileConfiguration getPlayerConfig(Player player) {
-        if(!playerFileConfigMap.containsKey(player)) setupPlayerConfig(player);
-        return playerFileConfigMap.get(player);
+    public static FileConfiguration getPlayerConfig(UUID playerID) {
+        if(!playerFileConfigMap.containsKey(playerID)) setupPlayerConfig(playerID);
+        return playerFileConfigMap.get(playerID);
     }
 
-    public static void savePlayerConfig(Player player) {
-
+    public static void savePlayerConfig(UUID playerID) {
+        if(!playerFileConfigMap.containsKey(playerID)) setupPlayerConfig(playerID);
+        try {
+            File file = new File(RedPractice.getInstance().getDataFolder() + "/PlayerData", playerID.toString() + ".yml");
+            FileConfiguration fileConfiguration = playerFileConfigMap.get(playerID);
+            fileConfiguration.save(file);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
