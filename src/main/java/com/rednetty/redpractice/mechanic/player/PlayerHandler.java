@@ -90,6 +90,10 @@ public class PlayerHandler extends Mechanics implements Listener {
     }
 
 
+    /**
+     * Loads the Data of a Player Correctly
+     * @param player - The player you want to load Data
+     */
     public static void loadPlayer(Player player) {
         PlayerConfigs.setupPlayerConfig(player.getUniqueId());
         generatePlayerConfig(player);
@@ -97,7 +101,7 @@ public class PlayerHandler extends Mechanics implements Listener {
         /*Loads Gems and Bank Size*/
         int gemBalance = fileConfig.getInt("Gems");
         int bankSize = fileConfig.getInt("Bank Size");
-        RankEnum playerRank = RankEnum.fromString(RankConfig.getConfig().get(player.getUniqueId().toString()).toString());
+        RankEnum playerRank = RankEnum.fromConfig(RankConfig.getConfig().get(player.getUniqueId().toString()).toString());
         /*Loads Bank Inventory*/
         Inventory inventory = Bukkit.createInventory(null, bankSize, player.getName() + "'s Bank (1/1)");
         if (!fileConfig.get("Bank Inventory").equals("Empty")) {

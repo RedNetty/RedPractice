@@ -35,7 +35,7 @@ public class ModerationHandler extends Mechanics implements Listener {
      * @return - Returns the Display Tag that is shown ingame for the rank
      */
     public static String getRankTag(RankEnum rankEnum) {
-        return ChatColor.translateAlternateColorCodes('&', RankEnum.getRankDisplay(rankEnum) + " ");
+        return ChatColor.translateAlternateColorCodes('&', RankEnum.getRankDisplay(rankEnum));
     }
 
     /*Deals with when a players rank is changed*/

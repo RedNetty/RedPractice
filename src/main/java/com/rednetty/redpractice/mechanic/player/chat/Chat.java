@@ -74,19 +74,16 @@ public class Chat extends Mechanics implements Listener {
             if (entity instanceof Player) event.getRecipients().add((Player) entity);
         });
         String playerRank =  RedPractice.getMechanicManager().getModerationHandler().getRankTag(PlayerHandler.getGamePlayer(player).getPlayerRank());
-        if (event.getMessage().contains("@i@")) { /*Used for Showing Items in Chat*/
+        if (event.getMessage().contains("@i@") && player.getInventory().getItemInMainHand().getType() != null) { /*Used for Showing Items in Chat*/
             sendShowMessage(player, event.getRecipients(), playerRank, event.getMessage(), event.getPlayer().getInventory().getItemInMainHand());
-            event.setFormat("");
+            event.setCancelled(true);
         } else { /*If player is not showing item just send normal Message*/
             event.setFormat(ChatColor.translateAlternateColorCodes('&', playerRank + "&7" + player.getName() + ": &f" + event.getMessage()));
         }
 
         /*Nobody Heard You Alert (Used a Task because it would send before the message sometimes)*/
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                event.getRecipients().forEach(recipient -> recipient.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Nobody heard you.."));
-            }
-        }.runTaskLaterAsynchronously(RedPractice.getInstance(), 1L);
+        if(event.getRecipients().size() <= 1) {
+            player.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Nobody heard you..");
+        }
     }
 }

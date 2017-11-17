@@ -23,15 +23,15 @@ public class GlobalCommand implements CommandExecutor {
             Player player = (Player) commandSender;
             GamePlayer gamePlayer = PlayerHandler.getGamePlayer(player);
             Set<Player> recipients = new HashSet<>(Bukkit.getOnlinePlayers());
-            String globalPrefix = "&b<&lG&r&b>"; /*Used to Determine what Prefix to use*/
-            String fullMessage = StringUtils.join(strings); /*Joins the Spaces between the Args into a Single Message*/
+            String globalPrefix = "&b<&lG&r&b> "; /*Used to Determine what Prefix to use*/
+            String fullMessage = StringUtils.join(strings, " "); /*Joins the Spaces between the Args into a Single Message*/
             String lowerCase = fullMessage.toLowerCase();
 
             if (lowerCase.contains("wts") || lowerCase.contains("wtb") || lowerCase.contains("trading") || lowerCase.contains("buying")) {
-                globalPrefix = "&a<&lT&r&a>";
+                globalPrefix = "&a<&lT&r&a> ";
             }
             String beforeMessage = ChatColor.translateAlternateColorCodes('&', globalPrefix + ModerationHandler.getRankTag(gamePlayer.getPlayerRank()) + "&7" + player.getName() + ": &f");
-            if (lowerCase.contains("@i@")) { /*If player is trying to show a Item Display it with the Method Below*/
+            if (lowerCase.contains("@i@") && player.getInventory().getItemInMainHand().getType() != null) { /*If player is trying to show a Item Display it with the Method Below*/
                 Chat.sendShowMessage(player, recipients, globalPrefix + ModerationHandler.getRankTag(gamePlayer.getPlayerRank()), fullMessage, player.getInventory().getItemInMainHand());
             } else {
                 for (Player target : recipients) {

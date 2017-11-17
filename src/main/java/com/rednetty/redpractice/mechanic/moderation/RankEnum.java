@@ -63,6 +63,15 @@ public enum RankEnum {
     }
 
     /**
+     * Used to load Ranks from the Config File (Can't use FromString as they are different)
+     * @param string - The String that you want to translate
+     * @return - Returns RankEnum as a rank that is translated.
+     */
+    public static RankEnum fromConfig(String string) {
+        return valueOf(string);
+    }
+
+    /**
      * used to translate the Enum into a String
      * @return - Returns the String name of the RankEnum
      */
