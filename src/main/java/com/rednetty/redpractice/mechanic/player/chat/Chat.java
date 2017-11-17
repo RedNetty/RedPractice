@@ -73,8 +73,8 @@ public class Chat extends Mechanics implements Listener {
         player.getLocation().getWorld().getNearbyEntities(player.getLocation(), 20, 20, 20).forEach(entity -> {
             if (entity instanceof Player) event.getRecipients().add((Player) entity);
         });
-        String playerRank =  RedPractice.getMechanicManager().getModerationHandler().getRankTag(PlayerHandler.getGamePlayer(player).getPlayerRank());
-        if (event.getMessage().contains("@i@") && player.getInventory().getItemInMainHand().getType() != null) { /*Used for Showing Items in Chat*/
+        String playerRank =  RedPractice.getMechanicManager().getModerationHandler().getNameTag(PlayerHandler.getGamePlayer(player).getPlayerRank());
+        if (event.getMessage().contains("@i@") && player.getInventory().getItemInMainHand().getType() != Material.AIR) { /*Used for Showing Items in Chat*/
             sendShowMessage(player, event.getRecipients(), playerRank, event.getMessage(), event.getPlayer().getInventory().getItemInMainHand());
             event.setCancelled(true);
         } else { /*If player is not showing item just send normal Message*/

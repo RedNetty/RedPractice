@@ -1,7 +1,7 @@
 package com.rednetty.redpractice.commands.moderation;
 
 import com.rednetty.redpractice.events.RankChangeEvent;
-import com.rednetty.redpractice.mechanic.moderation.RankEnum;
+import com.rednetty.redpractice.mechanic.moderation.Rank;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -25,8 +25,11 @@ public class SetRankCommand implements CommandExecutor {
                 return false;
 
             }
-            RankEnum rankEnum = RankEnum.fromString(args[1]);
-            RankChangeEvent event = new RankChangeEvent(sender, target, rankEnum);
+            if(!Rank.rankExists(args[1])) {
+                sender.sendMessage(ChatColor.RED + "Rank doesn't exist.");
+                return false;
+            }
+            RankChangeEvent event = new RankChangeEvent(sender, target, args[1]);
             Bukkit.getServer().getPluginManager().callEvent(event);
         }
         return false;

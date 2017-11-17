@@ -1,8 +1,5 @@
 package com.rednetty.redpractice.mechanic.player;
 
-import com.rednetty.redpractice.mechanic.moderation.RankEnum;
-import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.permissions.PermissionAttachment;
@@ -13,7 +10,7 @@ public class GamePlayer {
     public int gemAmount;
     public Inventory bankInventory;
     public int bankSize;
-    public RankEnum playerRank;
+    public String playerRank;
     PermissionAttachment permissions;
 
 
@@ -61,7 +58,7 @@ public class GamePlayer {
      * Used to get the Rank of the Specified Player
      * @return - Returns the Players Rank
      */
-    public RankEnum getPlayerRank() {
+    public String getPlayerRank() {
         return playerRank;
     }
 
@@ -94,7 +91,7 @@ public class GamePlayer {
         this.permissions = permissions;
     }
 
-    public void setPlayerRank(RankEnum playerRank) {
+    public void setPlayerRank(String playerRank) {
         this.playerRank = playerRank;
     }
 
@@ -105,7 +102,7 @@ public class GamePlayer {
      * @param bankSize - slot size of players bank
      * @param playerRank - Requires a RankEnum
      */
-    public GamePlayer(Player player, RankEnum playerRank, int gemAmount, Inventory bankInventory, int bankSize) {
+    public GamePlayer(Player player, String playerRank, int gemAmount, Inventory bankInventory, int bankSize) {
         setBankInventory(bankInventory);
         setBankSize(bankSize);
         setGemAmount(gemAmount);

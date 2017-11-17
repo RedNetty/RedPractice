@@ -3,14 +3,9 @@ package com.rednetty.redpractice.mechanic.player;
 import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.configs.PlayerConfigs;
 import com.rednetty.redpractice.configs.RankConfig;
-import com.rednetty.redpractice.events.RankChangeEvent;
 import com.rednetty.redpractice.mechanic.Mechanics;
-import com.rednetty.redpractice.mechanic.moderation.ModerationHandler;
-import com.rednetty.redpractice.mechanic.moderation.RankEnum;
-import lombok.Getter;
+import com.rednetty.redpractice.mechanic.moderation.Rank;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,7 +17,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -101,7 +95,7 @@ public class PlayerHandler extends Mechanics implements Listener {
         /*Loads Gems and Bank Size*/
         int gemBalance = fileConfig.getInt("Gems");
         int bankSize = fileConfig.getInt("Bank Size");
-        RankEnum playerRank = RankEnum.fromConfig(RankConfig.getConfig().get(player.getUniqueId().toString()).toString());
+        String playerRank = RankConfig.getConfig().getString(player.getUniqueId().toString());
         /*Loads Bank Inventory*/
         Inventory inventory = Bukkit.createInventory(null, bankSize, player.getName() + "'s Bank (1/1)");
         if (!fileConfig.get("Bank Inventory").equals("Empty")) {

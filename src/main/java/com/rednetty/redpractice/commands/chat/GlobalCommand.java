@@ -7,6 +7,7 @@ import com.rednetty.redpractice.mechanic.player.chat.Chat;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,9 +31,9 @@ public class GlobalCommand implements CommandExecutor {
             if (lowerCase.contains("wts") || lowerCase.contains("wtb") || lowerCase.contains("trading") || lowerCase.contains("buying")) {
                 globalPrefix = "&a<&lT&r&a> ";
             }
-            String beforeMessage = ChatColor.translateAlternateColorCodes('&', globalPrefix + ModerationHandler.getRankTag(gamePlayer.getPlayerRank()) + "&7" + player.getName() + ": &f");
-            if (lowerCase.contains("@i@") && player.getInventory().getItemInMainHand().getType() != null) { /*If player is trying to show a Item Display it with the Method Below*/
-                Chat.sendShowMessage(player, recipients, globalPrefix + ModerationHandler.getRankTag(gamePlayer.getPlayerRank()), fullMessage, player.getInventory().getItemInMainHand());
+            String beforeMessage = ChatColor.translateAlternateColorCodes('&', globalPrefix + ModerationHandler.getNameTag(gamePlayer.getPlayerRank()) + "&7" + player.getName() + ": &f");
+            if (lowerCase.contains("@i@") && player.getInventory().getItemInMainHand().getType() != Material.AIR) { /*If player is trying to show a Item Display it with the Method Below*/
+                Chat.sendShowMessage(player, recipients, globalPrefix + ModerationHandler.getNameTag(gamePlayer.getPlayerRank()), fullMessage, player.getInventory().getItemInMainHand());
             } else {
                 for (Player target : recipients) {
                     target.sendMessage(beforeMessage + fullMessage);

@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
-import java.util.List;
 
 public class ModerationHandler extends Mechanics implements Listener {
 
@@ -22,6 +21,7 @@ public class ModerationHandler extends Mechanics implements Listener {
     public void onEnable() {
         PermissionConfig.setupConfig();
         RankConfig.setupConfig();
+        Rank.loadRankList(); //Has to be after Permission Config due to its usages
         listener(this);
     }
 
@@ -30,12 +30,13 @@ public class ModerationHandler extends Mechanics implements Listener {
     }
 
 
+
     /**
      * Used to grab the Display Tag for the Players Rank
      * @return - Returns the Display Tag that is shown ingame for the rank
      */
-    public static String getRankTag(RankEnum rankEnum) {
-        return ChatColor.translateAlternateColorCodes('&', RankEnum.getRankDisplay(rankEnum));
+    public static String getNameTag(String rank) {
+        return ChatColor.translateAlternateColorCodes('&', Rank.getPrefix(rank));
     }
 
     /*Deals with when a players rank is changed*/
@@ -45,8 +46,8 @@ public class ModerationHandler extends Mechanics implements Listener {
         CommandSender setter = event.getSetter();
         Player target = event.getTarget();
         GamePlayer gamePlayer = PlayerHandler.getGamePlayer(target);
-        setter.sendMessage(ChatColor.GREEN + "You set " + target.getName() + "'s rank to " + getRankTag(event.getRank()));
-        target.sendMessage(ChatColor.GREEN + "Your rank was set to " +  getRankTag(event.getRank()));
+        setter.sendMessage(ChatColor.GREEN + "You set " + target.getName() + "'s rank to " + getNameTag(event.getRank()));
+        target.sendMessage(ChatColor.GREEN + "Your rank was set to " +  getNameTag(event.getRank()));
         gamePlayer.setPlayerRank(event.getRank());
         PlayerHandler.updateGamePlayer(gamePlayer);
         updatePermission(target);
@@ -59,7 +60,7 @@ public class ModerationHandler extends Mechanics implements Listener {
     public void updatePermission(Player player) {
         GamePlayer gamePlayer = PlayerHandler.getGamePlayer(player);
         gamePlayer.setPermissions(player.addAttachment(RedPractice.getInstance()));
-        RankEnum.getRankPerms(gamePlayer.getPlayerRank()).forEach(perm -> gamePlayer.getPermissions().setPermission(perm, true));
+        Rank.getRankPermissions(gamePlayer.getPlayerRank()).forEach(perm -> gamePlayer.getPermissions().setPermission(perm, true));
         PlayerHandler.updateGamePlayer(gamePlayer);
     }
 }

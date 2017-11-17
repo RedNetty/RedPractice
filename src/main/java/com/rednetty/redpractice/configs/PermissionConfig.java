@@ -1,11 +1,11 @@
 package com.rednetty.redpractice.configs;
 
 import com.rednetty.redpractice.RedPractice;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class PermissionConfig {
 
@@ -21,11 +21,22 @@ public class PermissionConfig {
             }
 
         }catch(IOException e) {
+            Bukkit.broadcastMessage("Error: Could not Create Config 'permissions.yml'");
             e.printStackTrace();
         }
         fileConfig = YamlConfiguration.loadConfiguration(file);
-        fileConfig.options().copyDefaults(true);
-        saveConfig();
+        try {
+            Reader defConfigStream = new InputStreamReader(RedPractice.getInstance().getResource("permissions.yml"), "UTF8");
+            if (defConfigStream != null) {
+                YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+                fileConfig.setDefaults(defConfig);
+            }
+            fileConfig.options().copyDefaults(true);
+            saveConfig();
+        }catch (UnsupportedEncodingException e) {
+            Bukkit.broadcastMessage("Error: Could not Copy Defaults in the Config 'permissions.yml'");
+            e.printStackTrace();
+        }
 
 
     }

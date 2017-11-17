@@ -1,6 +1,5 @@
 package com.rednetty.redpractice.events;
 
-import com.rednetty.redpractice.mechanic.moderation.RankEnum;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -11,12 +10,12 @@ public class RankChangeEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private CommandSender  setter;
     private Player target;
-    private RankEnum rankEnum;
+    private String rank;
 
-    public RankChangeEvent(CommandSender setter, Player target, RankEnum rankEnum) {
+    public RankChangeEvent(CommandSender setter, Player target, String rank) {
         this.target = target;
         this.setter = setter;
-        this.rankEnum = rankEnum;
+        this.rank = rank;
     }
     public HandlerList getHandlers() {
         return handlers;
@@ -30,16 +29,16 @@ public class RankChangeEvent extends Event {
      * Used to get the RankEnum that was just set
      * @return - Returns the Rank that was set by the setter
      */
-    public RankEnum getRank() {
-        return rankEnum;
+    public String getRank() {
+        return rank;
     }
 
     /**
      * Allows you to set the rank before it is handled
-     * @param rankEnum - Requires a Enum from the EnumClass RankEnum
+     * @param rank- Requires a Enum from the EnumClass RankEnum
      */
-    public void setRank(RankEnum rankEnum) {
-        this.rankEnum = rankEnum;
+    public void setRank(String rank) {
+        this.rank = rank;
     }
 
     /**
