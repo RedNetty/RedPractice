@@ -6,6 +6,7 @@ import com.rednetty.redpractice.configs.RankConfig;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.moderation.Rank;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 public class PlayerHandler extends Mechanics implements Listener {
 
@@ -100,7 +102,7 @@ public class PlayerHandler extends Mechanics implements Listener {
         Inventory inventory = Bukkit.createInventory(null, bankSize, player.getName() + "'s Bank (1/1)");
         if (!fileConfig.get("Bank Inventory").equals("Empty")) {
             loadBankItems(fileConfig).forEach(itemStack -> {
-                if(itemStack != null) inventory.addItem(itemStack);
+                if(itemStack != null && itemStack.getType() != Material.EMERALD && itemStack.getType() != Material.THIN_GLASS) inventory.addItem(itemStack);
             });
         }
         GamePlayer gamePlayer = new GamePlayer(player, playerRank, gemBalance, inventory, bankSize);

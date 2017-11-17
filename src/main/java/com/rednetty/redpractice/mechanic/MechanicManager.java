@@ -2,6 +2,7 @@ package com.rednetty.redpractice.mechanic;
 
 import com.rednetty.redpractice.mechanic.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
+import com.rednetty.redpractice.mechanic.player.bank.BankHandler;
 import com.rednetty.redpractice.mechanic.player.chat.Chat;
 import lombok.Getter;
 
@@ -15,6 +16,8 @@ public class MechanicManager {
     private Chat chat;
     @Getter
     private ModerationHandler moderationHandler;
+    @Getter
+    private BankHandler bankHandler;
 
 
     /**
@@ -25,6 +28,7 @@ public class MechanicManager {
         Stream.of(
                 playerHandler = new PlayerHandler(),
                 moderationHandler = new ModerationHandler(),
+                bankHandler = new BankHandler(),
                 chat = new Chat()
         ).forEach(manager -> manager.onEnable());
     }
@@ -37,6 +41,7 @@ public class MechanicManager {
         Stream.of(
                 playerHandler,
                 moderationHandler,
+                bankHandler,
                 chat
         ).forEach(manager -> manager.onDisable());
     }
