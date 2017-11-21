@@ -5,6 +5,7 @@ import com.rednetty.redpractice.mechanic.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.player.GamePlayer;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
 import com.rednetty.redpractice.mechanic.player.chat.Chat;
+import com.rednetty.redpractice.mechanic.player.economy.EconomyHandler;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,6 +29,7 @@ public class GlobalCommand implements CommandExecutor {
             String globalPrefix = "&b<&lG&r&b> "; /*Used to Determine what Prefix to use*/
             String fullMessage = StringUtils.join(strings, " "); /*Joins the Spaces between the Args into a Single Message*/
             String lowerCase = fullMessage.toLowerCase();
+            player.getInventory().addItem(EconomyHandler.createBankNote(100));
             if (lowerCase.contains("wts") || lowerCase.contains("wtb") || lowerCase.contains("trading") || lowerCase.contains("buying")) {
                 globalPrefix = "&a<&lT&r&a> ";
             }

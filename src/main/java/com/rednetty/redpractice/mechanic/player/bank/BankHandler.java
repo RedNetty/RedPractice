@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
@@ -29,6 +30,7 @@ import java.util.stream.IntStream;
 public class BankHandler extends Mechanics implements Listener {
 
     private ConcurrentHashMap<Player, Integer> upgradingMap = new ConcurrentHashMap<>();
+    private ArrayList<Player> convertingNoteList = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -40,7 +42,7 @@ public class BankHandler extends Mechanics implements Listener {
     }
 
 
-    public ItemStack bankGem(GamePlayer gamePlayer) {
+    public ItemStack gemItem(GamePlayer gamePlayer) {
         return new ItemBuilder(Material.EMERALD).setName("&a" + gamePlayer.getGemAmount() + " &lGEM(s)").setLore(Arrays.asList("&7Right Click to create &aA GEM NOTE")).build();
     }
 
@@ -67,11 +69,11 @@ public class BankHandler extends Mechanics implements Listener {
     public Inventory getBank(GamePlayer gamePlayer) {
         Inventory inventory = gamePlayer.getBankInventory();
         if (inventory.getSize() <= 27) {
-            inventory.setItem(inventory.getSize() - 1, bankGem(gamePlayer));
+            inventory.setItem(inventory.getSize() - 1, gemItem(gamePlayer));
         } else {
             IntStream.range(inventory.getSize() - 9, inventory.getSize()).forEach(slot -> {
                 if (slot == inventory.getSize() - 5) {
-                    inventory.setItem(slot, bankGem(gamePlayer));
+                    inventory.setItem(slot, gemItem(gamePlayer));
                 } else {
                     inventory.setItem(slot, new ItemStack(Material.THIN_GLASS));
                 }
@@ -79,6 +81,18 @@ public class BankHandler extends Mechanics implements Listener {
             });
         }
         return inventory;
+    }
+
+
+    /**
+     * Get the price of the next upgrade for the players bank
+     *
+     * @param current - Current slots in the players bank
+     * @return - Returns the Price of Gems that the upgrade will cost
+     */
+    public int upgradePrice(int current) {
+        if (current >= 63) return 0;
+        return current * 150;
     }
 
     //This is where opening the bank is handled
@@ -94,24 +108,21 @@ public class BankHandler extends Mechanics implements Listener {
         }
     }
 
-
-    /**
-     * Get the price of the next upgrade for the players bank
-     *
-     * @param current - Current slots in the players bank
-     * @return - Returns the Price of Gems that the upgrade will cost
-     */
-    public int upgradePrice(int current) {
-        if (current >= 54) return 0;
-        return current * 150;
-    }
-
     //Deals with Taking out Gems
     @EventHandler
     public void onInventoryInteract(InventoryClickEvent event) {
         if (event.getInventory().getTitle().contains("Bank")) {
-            if (event.getCurrentItem().getType() == Material.EMERALD || event.getCurrentItem().getType() == Material.THIN_GLASS) {
-                event.setCancelled(true);
+            if (event.getWhoClicked() instanceof Player) {
+                Player player = (Player)event.getWhoClicked();
+                if(convertingNoteList.contains(player)) return;
+                if (event.getCurrentItem().getType() == Material.EMERALD || event.getCurrentItem().getType() == Material.THIN_GLASS) {
+                    event.setCancelled(true);
+                    if (event.getCurrentItem().getType() == Material.EMERALD) {
+                        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Please enter the amount you'd like to CONVERT to a gem note. Alternatively, type &c'cancel' &7to void this operation"));
+                        player.closeInventory();
+                        convertingNoteList.add(player);
+                    }
+                }
             }
         }
     }
@@ -125,12 +136,13 @@ public class BankHandler extends Mechanics implements Listener {
             GamePlayer gamePlayer = PlayerHandler.getGamePlayer(player);
             if (upgradingMap.containsKey(player)) return;
 
-            if (gamePlayer.getBankSize() >= 54) {
+            if (gamePlayer.getBankSize() >= 63) {
                 player.sendMessage(ChatColor.RED + "Your bank is already max size.");
                 return;
             }
             int price = upgradePrice(gamePlayer.getBankSize());
             StringUtil.sendCenteredMessage(player, ChatColor.translateAlternateColorCodes('&', "&8*** &a&lBank Upgrade Confirmation &r&8***"));
+            player.sendMessage("");
             StringUtil.sendCenteredMessage(player, ChatColor.DARK_GRAY + "Current Slots: " + ChatColor.GREEN + gamePlayer.getBankSize() + ChatColor.DARK_GRAY + " New Slots:" + ChatColor.GREEN + (gamePlayer.getBankSize() + 9));
             player.sendMessage("");
             StringUtil.sendCenteredMessage(player, ChatColor.DARK_GRAY + "Upgrade Cost: " + ChatColor.GREEN + price + " Gem(s)");
@@ -145,10 +157,9 @@ public class BankHandler extends Mechanics implements Listener {
     @EventHandler
     public void chatEvent(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-
+        String message = event.getMessage().toLowerCase();
         if (upgradingMap.containsKey(player)) {
             event.setCancelled(true);
-            String message = event.getMessage().toLowerCase();
             if (!message.contains("confirm") || !EconomyHandler.hasEnoughInBank(upgradingMap.get(player), PlayerHandler.getGamePlayer(player))) {
                 player.sendMessage(ChatColor.RED + "Bank upgrade cancelled");
                 player.sendMessage(ChatColor.RED + "You either cancelled the upgrade or do not have enough money.");
@@ -160,6 +171,23 @@ public class BankHandler extends Mechanics implements Listener {
 
             }
             upgradingMap.remove(player);
+        }
+        if(convertingNoteList.contains(player)) {
+            event.setCancelled(true);
+            int noteAmount = 0;
+            try{
+                noteAmount = Integer.parseInt(message);
+            }catch (NumberFormatException e) {
+                player.sendMessage(ChatColor.RED + "You have cancelled your WITHDRAW.");
+            }
+            if(EconomyHandler.hasEnoughInBank(noteAmount, PlayerHandler.getGamePlayer(player))) {
+                EconomyHandler.withdrawGems(noteAmount, PlayerHandler.getGamePlayer(player));
+                player.getInventory().addItem(EconomyHandler.createBankNote(noteAmount));
+            }else{
+                player.sendMessage(ChatColor.RED + "You do not have enough gems for this.");
+            }
+            convertingNoteList.remove(player);
+
         }
     }
 }

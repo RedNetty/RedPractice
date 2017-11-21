@@ -1,12 +1,11 @@
 package com.rednetty.redpractice.utils.items;
 
-import net.minecraft.server.v1_12_R1.NBTBase;
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class NBTEditor {
-    private net.minecraft.server.v1_12_R1.ItemStack itemStack;
+    private net.minecraft.server.v1_9_R1.ItemStack itemStack;
 
     public NBTEditor(ItemStack itemStack) {
         this.itemStack = CraftItemStack.asNMSCopy(itemStack);
@@ -29,13 +28,17 @@ public class NBTEditor {
 
     }
 
+    public void remove(String key) {
+        this.itemStack.getTag().remove(key);
+    }
+
     /**
      * Check if the itemstack has an NBTTagCompound.
      *
      * @return Does it?
      */
     public boolean hasTag() {
-        return this.itemStack != null && this.itemStack.getTag() != null && this.itemStack.hasTag();
+        return this.itemStack.hasTag();
     }
 
     /**
@@ -51,27 +54,13 @@ public class NBTEditor {
     /**
      * Check whether the NBTTagCompound of the itemstack has a specific value at a specific key.
      *
-     * @param key   The key to check.
-     * @param value The value of the key.
+     * @param key The key to check.
      * @return Probably I guess?
      */
     public boolean hasValue(String key, Object value) {
         if (!this.hasKey(key)) return false;
 
         return this.itemStack.getTag().get(key) == value;
-    }
-
-    /**
-     * Set an NBT value at a key.
-     *
-     * @param key     The key.
-     * @param nbtBase The value.
-     * @return New NBTEditor.
-     */
-    public NBTEditor set(String key, NBTBase nbtBase) {
-        this.itemStack.getTag().set(key, nbtBase);
-
-        return this;
     }
 
     /**
@@ -123,6 +112,15 @@ public class NBTEditor {
         return this.itemStack.getTag().getString(key);
     }
 
+    /**
+     * Get an Integer value from a key.
+     *
+     * @param key The key.
+     * @return The value.
+     */
+    public int getInteger(String key) {
+        return this.itemStack.getTag().getInt(key);
+    }
 
     /**
      * Updates the itemstack and applies all changes.
