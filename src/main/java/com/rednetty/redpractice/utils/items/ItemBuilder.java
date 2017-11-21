@@ -1,4 +1,4 @@
-package com.rednetty.redpractice.utils;
+package com.rednetty.redpractice.utils.items;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

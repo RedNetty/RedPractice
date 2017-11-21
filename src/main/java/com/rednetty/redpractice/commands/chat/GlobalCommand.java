@@ -28,7 +28,6 @@ public class GlobalCommand implements CommandExecutor {
             String globalPrefix = "&b<&lG&r&b> "; /*Used to Determine what Prefix to use*/
             String fullMessage = StringUtils.join(strings, " "); /*Joins the Spaces between the Args into a Single Message*/
             String lowerCase = fullMessage.toLowerCase();
-            RedPractice.getMechanicManager().getBankHandler().updateBankSize(gamePlayer, gamePlayer.getBankSize() + 9);
             if (lowerCase.contains("wts") || lowerCase.contains("wtb") || lowerCase.contains("trading") || lowerCase.contains("buying")) {
                 globalPrefix = "&a<&lT&r&a> ";
             }

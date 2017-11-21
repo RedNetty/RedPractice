@@ -5,7 +5,7 @@ import com.rednetty.redpractice.mechanic.MechanicManager;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class RedPractice extends JavaPlugin {
+public class RedPractice extends JavaPlugin{
 
     /**
      * @author Jackson(Red29)
