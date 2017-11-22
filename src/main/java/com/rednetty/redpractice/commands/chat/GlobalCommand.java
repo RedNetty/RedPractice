@@ -1,6 +1,6 @@
 package com.rednetty.redpractice.commands.chat;
 
-import com.rednetty.redpractice.mechanic.moderation.ModerationHandler;
+import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.player.GamePlayer;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
 import com.rednetty.redpractice.mechanic.player.chat.ChatHandler;

@@ -104,7 +104,7 @@ public class BankHandler extends Mechanics implements Listener {
      * @return - Returns the Price of Gems that the upgrade will cost
      */
     public int upgradePrice(int current) {
-        if (current >= 63) return 0;
+        if (current >= 54) return 0;
         return current * 200;
     }
 
@@ -149,6 +149,7 @@ public class BankHandler extends Mechanics implements Listener {
                     if (amount > 0) {
                         EconomyHandler.depositGems(amount, PlayerHandler.getGamePlayer(player));
                         event.setCursor(null);
+                        player.updateInventory();
                         updateBankGem(gamePlayer, event.getView().getTopInventory());
                     }
                 }
@@ -176,7 +177,7 @@ public class BankHandler extends Mechanics implements Listener {
             GamePlayer gamePlayer = PlayerHandler.getGamePlayer(player);
             if (upgradingMap.containsKey(player)) return;
 
-            if (gamePlayer.getBankSize() >= 63) {
+            if (gamePlayer.getBankSize() >= 54) {
                 player.sendMessage(ChatColor.RED + "Your bank is already max size.");
                 return;
             }

@@ -1,7 +1,6 @@
-package com.rednetty.redpractice.mechanic.moderation;
+package com.rednetty.redpractice.mechanic.server.moderation;
 
 import com.rednetty.redpractice.configs.PermissionConfig;
-import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;

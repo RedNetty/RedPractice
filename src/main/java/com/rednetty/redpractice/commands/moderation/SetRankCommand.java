@@ -1,7 +1,7 @@
 package com.rednetty.redpractice.commands.moderation;
 
 import com.rednetty.redpractice.events.RankChangeEvent;
-import com.rednetty.redpractice.mechanic.moderation.Rank;
+import com.rednetty.redpractice.mechanic.server.moderation.Rank;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

@@ -1,4 +1,4 @@
-package com.rednetty.redpractice.mechanic.moderation;
+package com.rednetty.redpractice.mechanic.server.moderation;
 
 import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.configs.PermissionConfig;
@@ -7,7 +7,6 @@ import com.rednetty.redpractice.events.RankChangeEvent;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.player.GamePlayer;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
