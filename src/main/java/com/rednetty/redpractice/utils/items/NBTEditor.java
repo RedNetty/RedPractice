@@ -1,11 +1,11 @@
 package com.rednetty.redpractice.utils.items;
 
-import net.minecraft.server.v1_9_R1.NBTTagCompound;
-import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class NBTEditor {
-    private net.minecraft.server.v1_9_R1.ItemStack itemStack;
+    private net.minecraft.server.v1_12_R1.ItemStack itemStack;
 
     public NBTEditor(ItemStack itemStack) {
         this.itemStack = CraftItemStack.asNMSCopy(itemStack);

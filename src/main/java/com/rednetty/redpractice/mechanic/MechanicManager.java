@@ -3,7 +3,7 @@ package com.rednetty.redpractice.mechanic;
 import com.rednetty.redpractice.mechanic.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
 import com.rednetty.redpractice.mechanic.player.bank.BankHandler;
-import com.rednetty.redpractice.mechanic.player.chat.Chat;
+import com.rednetty.redpractice.mechanic.player.chat.ChatHandler;
 import lombok.Getter;
 
 import java.util.stream.Stream;
@@ -13,7 +13,7 @@ public class MechanicManager {
     @Getter
     private PlayerHandler playerHandler;
     @Getter
-    private Chat chat;
+    private ChatHandler chatHandler;
     @Getter
     private ModerationHandler moderationHandler;
     @Getter
@@ -29,7 +29,7 @@ public class MechanicManager {
                 playerHandler = new PlayerHandler(),
                 moderationHandler = new ModerationHandler(),
                 bankHandler = new BankHandler(),
-                chat = new Chat()
+                chatHandler = new ChatHandler()
         ).forEach(manager -> manager.onEnable());
     }
 
@@ -42,7 +42,7 @@ public class MechanicManager {
                 playerHandler,
                 moderationHandler,
                 bankHandler,
-                chat
+                chatHandler
         ).forEach(manager -> manager.onDisable());
     }
 }

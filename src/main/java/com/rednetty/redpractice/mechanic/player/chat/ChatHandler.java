@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class Chat extends Mechanics implements Listener {
+public class ChatHandler extends Mechanics implements Listener {
 
     @Override
     public void onEnable() {
@@ -36,7 +36,7 @@ public class Chat extends Mechanics implements Listener {
      * This is used when a player puts @i@ in his message, it will send a JSONMessage with the info of the Item Specified.
      * @param sender     - This would be the person sending the message originally
      * @param recipients - The Recipients of the message that should get this message
-     * @param prefix     - Mainly used for Global Chat this is so you can add a prefix to the message
+     * @param prefix     - Mainly used for Global ChatHandler this is so you can add a prefix to the message
      * @param message    - The message the sender sent
      * @param itemStack  - ItemStack the sender is trying to show
      */
@@ -65,7 +65,7 @@ public class Chat extends Mechanics implements Listener {
     }
 
 
-    /*Local Chat*/
+    /*Local ChatHandler*/
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
@@ -74,7 +74,7 @@ public class Chat extends Mechanics implements Listener {
             if (entity instanceof Player) event.getRecipients().add((Player) entity);
         });
         String playerRank =  RedPractice.getMechanicManager().getModerationHandler().getNameTag(PlayerHandler.getGamePlayer(player).getPlayerRank());
-        if (event.getMessage().contains("@i@") && player.getInventory().getItemInMainHand().getType() != Material.AIR) { /*Used for Showing Items in Chat*/
+        if (event.getMessage().contains("@i@") && player.getInventory().getItemInMainHand().getType() != Material.AIR) { /*Used for Showing Items in ChatHandler*/
             sendShowMessage(player, event.getRecipients(), playerRank, event.getMessage(), event.getPlayer().getInventory().getItemInMainHand());
             event.setCancelled(true);
         } else { /*If player is not showing item just send normal Message*/
@@ -82,7 +82,7 @@ public class Chat extends Mechanics implements Listener {
         }
 
         /*Nobody Heard You Alert (Used a Task because it would send before the message sometimes)*/
-        if(event.getRecipients().size() <= 1) {
+        if(event.getRecipients().size() <= 1 && !event.isCancelled()) {
             player.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Nobody heard you..");
         }
     }

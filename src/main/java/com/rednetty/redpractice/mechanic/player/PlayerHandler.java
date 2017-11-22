@@ -1,11 +1,13 @@
 package com.rednetty.redpractice.mechanic.player;
 
+import com.rednetty.redpractice.Constants;
 import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.configs.PlayerConfigs;
 import com.rednetty.redpractice.configs.RankConfig;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.moderation.Rank;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -16,6 +18,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -31,7 +34,12 @@ public class PlayerHandler extends Mechanics implements Listener {
     @Override
     public void onEnable() {
         PlayerConfigs.setupConfig();
-
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Bukkit.getOnlinePlayers().forEach(player -> saveGamePlayer(player));
+            }
+        }.runTaskTimerAsynchronously(RedPractice.getInstance(), 200L, 200L);
         listener(this);
     }
 

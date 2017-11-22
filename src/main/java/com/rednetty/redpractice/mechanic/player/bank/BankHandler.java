@@ -83,6 +83,19 @@ public class BankHandler extends Mechanics implements Listener {
         return inventory;
     }
 
+    /**
+     * Updates the Players Bank Gem so that it shows the correct Value
+     * @param gamePlayer - Gameplayer?
+     * @param inventory - The Inventory you are checking for (Should be a Bank) ??
+     */
+    public void updateBankGem(GamePlayer gamePlayer, Inventory inventory) {
+        for (ItemStack itemStack : inventory.getContents()) {
+            if(itemStack != null && itemStack.getType() == Material.EMERALD) {
+                itemStack.setItemMeta(gemItem(gamePlayer).getItemMeta());
+            }
+        }
+    }
+
 
     /**
      * Get the price of the next upgrade for the players bank
@@ -92,10 +105,13 @@ public class BankHandler extends Mechanics implements Listener {
      */
     public int upgradePrice(int current) {
         if (current >= 63) return 0;
-        return current * 150;
+        return current * 200;
     }
 
-    //This is where opening the bank is handled
+
+    /**
+     * Handles the Opening of the Players Bank
+     */
     @EventHandler
     public void onBankOpen(InventoryOpenEvent event) {
         if (event.getInventory().getType() == InventoryType.ENDER_CHEST) {
@@ -108,13 +124,35 @@ public class BankHandler extends Mechanics implements Listener {
         }
     }
 
-    //Deals with Taking out Gems
+    /**
+     * Deals with Adding and Removing Items from the Bank
+     */
     @EventHandler
     public void onInventoryInteract(InventoryClickEvent event) {
-        if (event.getInventory().getTitle().contains("Bank")) {
+        if (event.getView().getTopInventory().getTitle().contains("Bank")) {
             if (event.getWhoClicked() instanceof Player) {
-                Player player = (Player)event.getWhoClicked();
-                if(convertingNoteList.contains(player)) return;
+                Player player = (Player) event.getWhoClicked();
+                GamePlayer gamePlayer = PlayerHandler.getGamePlayer(player);
+                if (event.isShiftClick() && event.getCurrentItem() != null) { // Deals with when it is Shift Clicked in
+                    ItemStack itemStack = event.getCurrentItem();
+                    int amount = EconomyHandler.getValue(itemStack);
+                    if (amount > 0) {
+                        event.setCancelled(true);
+                        EconomyHandler.depositGems(amount, PlayerHandler.getGamePlayer(player));
+                        event.setCurrentItem(null);
+                        updateBankGem(gamePlayer, event.getView().getTopInventory());
+                    }
+                }
+                if (!event.isShiftClick() && event.getCursor() != null) { // Deals with when it is placed in.
+                    ItemStack itemStack = event.getCursor();
+                    int amount = EconomyHandler.getValue(itemStack);
+                    if (amount > 0) {
+                        EconomyHandler.depositGems(amount, PlayerHandler.getGamePlayer(player));
+                        event.setCursor(null);
+                        updateBankGem(gamePlayer, event.getView().getTopInventory());
+                    }
+                }
+                if (convertingNoteList.contains(player)) return;
                 if (event.getCurrentItem().getType() == Material.EMERALD || event.getCurrentItem().getType() == Material.THIN_GLASS) {
                     event.setCancelled(true);
                     if (event.getCurrentItem().getType() == Material.EMERALD) {
@@ -128,7 +166,9 @@ public class BankHandler extends Mechanics implements Listener {
     }
 
 
-    //Handles the starting of upgrading the bank
+    /**
+     * Deals with the Interacting Part of Upgrading the Players Bank Account
+     */
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -153,7 +193,10 @@ public class BankHandler extends Mechanics implements Listener {
         }
     }
 
-    //Handles the Chat Event for Bank Upgrade
+    /**
+     * Uses the Event to Handle a Chat Prompt for Taking money out of The Bank and Upgrading
+     * The Players Bank Size
+     */
     @EventHandler
     public void chatEvent(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
@@ -172,19 +215,20 @@ public class BankHandler extends Mechanics implements Listener {
             }
             upgradingMap.remove(player);
         }
-        if(convertingNoteList.contains(player)) {
+        if (convertingNoteList.contains(player)) {
             event.setCancelled(true);
             int noteAmount = 0;
-            try{
+            try {
                 noteAmount = Integer.parseInt(message);
-            }catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 player.sendMessage(ChatColor.RED + "You have cancelled your WITHDRAW.");
             }
-            if(EconomyHandler.hasEnoughInBank(noteAmount, PlayerHandler.getGamePlayer(player))) {
+            if (EconomyHandler.hasEnoughInBank(noteAmount, PlayerHandler.getGamePlayer(player))) {
                 EconomyHandler.withdrawGems(noteAmount, PlayerHandler.getGamePlayer(player));
                 player.getInventory().addItem(EconomyHandler.createBankNote(noteAmount));
-            }else{
-                player.sendMessage(ChatColor.RED + "You do not have enough gems for this.");
+                player.playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_FLAP, 1.0f, 1.2f);
+            } else {
+                player.sendMessage(ChatColor.RED + "Please enter a NUMBER, the amount you'd like to WITHDRAW from your bank account. Or type 'cancel' to void the withdrawl.");
             }
             convertingNoteList.remove(player);
 

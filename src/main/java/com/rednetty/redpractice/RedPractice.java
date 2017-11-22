@@ -32,6 +32,7 @@ public class RedPractice extends JavaPlugin{
         mechanicManager = new MechanicManager();
         mechanicManager.init();
         CommandManager.registerCommands();
+        this.getConfig().options().copyDefaults(true);
     }
 
     @Override
