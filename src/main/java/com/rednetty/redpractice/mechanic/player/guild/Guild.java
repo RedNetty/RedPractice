@@ -1,5 +1,6 @@
 package com.rednetty.redpractice.mechanic.player.guild;
 
+
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -95,7 +96,7 @@ public class Guild {
 
     /**
      * Allows you to set the tag of a Guild
-     * Tags should be >=4 Characters
+     *
      * @param guildTag - The Tag you would like to set
      */
     public void setGuildTag(String guildTag) {
