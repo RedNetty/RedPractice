@@ -4,6 +4,7 @@ import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.configs.PlayerConfigs;
 import com.rednetty.redpractice.configs.RankConfig;
 import com.rednetty.redpractice.mechanic.Mechanics;
+import com.rednetty.redpractice.mechanic.player.guild.GuildHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -55,6 +56,7 @@ public class PlayerHandler extends Mechanics implements Listener {
     public static void generatePlayerConfig(Player player) {
         FileConfiguration fileConfig = PlayerConfigs.getPlayerConfig(player.getUniqueId());
         if (!fileConfig.isSet("Gems")) fileConfig.set("Gems", 0);
+        if(!fileConfig.isSet("Guild Name")) fileConfig.set("Guild Name", "");
         if (!fileConfig.isSet("Bank Size")) fileConfig.set("Bank Size", 9);
         if (!fileConfig.isSet("Bank Inventory")) fileConfig.set("Bank Inventory", "Empty");
         if (!RankConfig.getConfig().contains(player.getUniqueId().toString()))
@@ -71,6 +73,7 @@ public class PlayerHandler extends Mechanics implements Listener {
     public static void saveGamePlayer(Player player) {
         FileConfiguration fileConfig = PlayerConfigs.getPlayerConfig(player.getUniqueId());
         fileConfig.set("Gems", getGamePlayer(player).getGemAmount());
+        fileConfig.set("Guild Name", getGamePlayer(player).getGuildName());
         fileConfig.set("Bank Size", getGamePlayer(player).getBankSize());
         fileConfig.set("Bank Inventory", getGamePlayer(player).getBankInventory().getContents());
         RankConfig.getConfig().set(player.getUniqueId().toString(), getGamePlayer(player).getPlayerRank().toString());
@@ -101,6 +104,7 @@ public class PlayerHandler extends Mechanics implements Listener {
         /*Loads Gems and Bank Size*/
         int gemBalance = fileConfig.getInt("Gems");
         int bankSize = fileConfig.getInt("Bank Size");
+        String guildName = fileConfig.getString("Guild Name");
         String playerRank = RankConfig.getConfig().getString(player.getUniqueId().toString());
         /*Loads Bank Inventory*/
         Inventory inventory = Bukkit.createInventory(null, bankSize, player.getName() + "'s Bank (1/1)");
@@ -108,6 +112,9 @@ public class PlayerHandler extends Mechanics implements Listener {
             loadBankItems(fileConfig).forEach(itemStack -> {
                 if(itemStack != null && itemStack.getType() != Material.EMERALD && itemStack.getType() != Material.THIN_GLASS) inventory.addItem(itemStack);
             });
+        }
+        if(!GuildHandler.isGuildLoaded(guildName)) {
+            GuildHandler.loadGuild(guildName);
         }
         GamePlayer gamePlayer = new GamePlayer(player, playerRank, gemBalance, inventory, bankSize);
         gamePlayerHashMap.put(player, gamePlayer);

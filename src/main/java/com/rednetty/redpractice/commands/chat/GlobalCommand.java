@@ -22,7 +22,6 @@ public class GlobalCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender.hasPermission("practice.globalchat") && commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            GamePlayer gamePlayer = PlayerHandler.getGamePlayer(player);
             Set<Player> recipients = new HashSet<>(Bukkit.getOnlinePlayers());
             String globalPrefix = "&b<&lG&r&b> "; /*Used to Determine what Prefix to use*/
             String fullMessage = StringUtils.join(strings, " "); /*Joins the Spaces between the Args into a Single Message*/
@@ -30,9 +29,9 @@ public class GlobalCommand implements CommandExecutor {
             if (lowerCase.contains("wts") || lowerCase.contains("wtb") || lowerCase.contains("trading") || lowerCase.contains("buying")) {
                 globalPrefix = "&a<&lT&r&a> ";
             }
-            String beforeMessage = ChatColor.translateAlternateColorCodes('&', globalPrefix + ModerationHandler.getNameTag(gamePlayer.getPlayerRank()) + "&7" + player.getName() + ": &f");
+            String beforeMessage = ChatColor.translateAlternateColorCodes('&', globalPrefix + ChatHandler.getFullTag(player) + "&7" + player.getName() + ": &f");
             if (lowerCase.contains("@i@") && player.getInventory().getItemInMainHand().getType() != Material.AIR) { /*If player is trying to show a Item Display it with the Method Below*/
-                ChatHandler.sendShowMessage(player, recipients, globalPrefix + ModerationHandler.getNameTag(gamePlayer.getPlayerRank()), fullMessage, player.getInventory().getItemInMainHand());
+                ChatHandler.sendShowMessage(player, recipients, globalPrefix + ChatHandler.getFullTag(player), fullMessage, player.getInventory().getItemInMainHand());
             } else {
                 for (Player target : recipients) {
                     target.sendMessage(beforeMessage + fullMessage);

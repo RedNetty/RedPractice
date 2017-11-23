@@ -1,6 +1,7 @@
 package com.rednetty.redpractice.mechanic.player.guild;
 
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -9,11 +10,11 @@ public class Guild {
 
     private String guildName;
     private String guildTag;
-    private List<Player> guildMembers;
-    private List<Player> guildOfficers;
-    private Player guildOwner;
+    private List<OfflinePlayer> guildMembers;
+    private List<OfflinePlayer> guildOfficers;
+    private OfflinePlayer guildOwner;
 
-    public Guild(String guildName, String guildTag, List<Player> guildMembers, List<Player> guildOfficers, Player guildOwner) {
+    public Guild(String guildName, String guildTag, List<OfflinePlayer> guildMembers, List<OfflinePlayer> guildOfficers, OfflinePlayer guildOwner) {
         this.guildMembers = guildMembers;
         this.guildName = guildName;
         this.guildTag = guildTag;
@@ -25,7 +26,7 @@ public class Guild {
      * Used to get a List of all The Members in the Guild
      * @return - Returns a List of Players
      */
-    public List<Player> getGuildMembers() {
+    public List<OfflinePlayer> getGuildMembers() {
         return guildMembers;
     }
 
@@ -33,15 +34,15 @@ public class Guild {
      * Used to get a List of all The Officers in the Guild
      * @return - Returns a List of Players
      */
-    public List<Player> getGuildOfficers() {
+    public List<OfflinePlayer> getGuildOfficers() {
         return guildOfficers;
     }
 
     /**
      * Used to get the Owner of the Guild
-     * @return - Returns a The Player (Owner)
+     * @return - Returns a The OfflinePlayer (Owner)
      */
-    public Player getGuildOwner() {
+    public OfflinePlayer getGuildOwner() {
         return guildOwner;
     }
 
@@ -66,7 +67,7 @@ public class Guild {
      * Allows you to set/change the Guild Member List
      * @param guildMembers - Requires a List of Players
      */
-    public void setGuildMembers(List<Player> guildMembers) {
+    public void setGuildMembers(List<OfflinePlayer> guildMembers) {
         this.guildMembers = guildMembers;
     }
 
@@ -82,15 +83,15 @@ public class Guild {
      * Allows you to set/change the Guild Officer List
      * @param guildOfficers -  Requires a List of Players
      */
-    public void setGuildOfficers(List<Player> guildOfficers) {
+    public void setGuildOfficers(List<OfflinePlayer> guildOfficers) {
         this.guildOfficers = guildOfficers;
     }
 
     /**
-     * Allows you to set a Player as the Owner of a Guild
-     * @param guildOwner - A Player that you want to set as owner
+     * Allows you to set a OfflinePlayer as the Owner of a Guild
+     * @param guildOwner - A OfflinePlayer that you want to set as owner
      */
-    public void setGuildOwner(Player guildOwner) {
+    public void setGuildOwner(OfflinePlayer guildOwner) {
         this.guildOwner = guildOwner;
     }
 

@@ -3,6 +3,8 @@ package com.rednetty.redpractice.mechanic.player.chat;
 import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
+import com.rednetty.redpractice.mechanic.player.guild.GuildHandler;
+import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.utils.JSONMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -30,6 +32,18 @@ public class ChatHandler extends Mechanics implements Listener {
 
     }
 
+    /**
+     * Used to Combine all the Player Tags
+     * @param player - The Player you are trying to get it for
+     * @return - Returns the Prefixes/Tags
+     */
+    public static String getFullTag(Player player) {
+        String guildTag = "";
+        if(GuildHandler.isInAGuild(player)) {
+            guildTag = "[" + GuildHandler.guildFromString(PlayerHandler.getGamePlayer(player).getGuildName()).getGuildTag() + "] ";
+        }
+        return ChatColor.WHITE.toString() + guildTag + ModerationHandler.getNameTag(PlayerHandler.getGamePlayer(player).getPlayerRank());
+    }
 
 
     /**
@@ -73,12 +87,12 @@ public class ChatHandler extends Mechanics implements Listener {
         player.getLocation().getWorld().getNearbyEntities(player.getLocation(), 20, 20, 20).forEach(entity -> {
             if (entity instanceof Player) event.getRecipients().add((Player) entity);
         });
-        String playerRank =  RedPractice.getMechanicManager().getModerationHandler().getNameTag(PlayerHandler.getGamePlayer(player).getPlayerRank());
+        String playerPrefix =  getFullTag(player);
         if (event.getMessage().contains("@i@") && player.getInventory().getItemInMainHand().getType() != Material.AIR) { /*Used for Showing Items in ChatHandler*/
-            sendShowMessage(player, event.getRecipients(), playerRank, event.getMessage(), event.getPlayer().getInventory().getItemInMainHand());
+            sendShowMessage(player, event.getRecipients(), playerPrefix, event.getMessage(), event.getPlayer().getInventory().getItemInMainHand());
             event.setCancelled(true);
         } else { /*If player is not showing item just send normal Message*/
-            event.setFormat(ChatColor.translateAlternateColorCodes('&', playerRank + "&7" + player.getName() + ": &f" + event.getMessage()));
+            event.setFormat(ChatColor.translateAlternateColorCodes('&', playerPrefix + "&7" + player.getName() + ": &f" + event.getMessage()));
         }
 
         /*Nobody Heard You Alert (Used a Task because it would send before the message sometimes)*/
