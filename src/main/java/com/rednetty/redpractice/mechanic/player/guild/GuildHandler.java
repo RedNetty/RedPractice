@@ -32,6 +32,7 @@ public class GuildHandler extends Mechanics implements Listener{
 
     /**
      * Get the Guild Instance from a String
+     * @apiNote - MUST BE USED ONLY IF THE GUILD IS LOADED!!
      * @param guildName - The Guild Name you are trying to get the Guild
      * @return - Returns either Null if it doesn't exist or the Guild
      */
