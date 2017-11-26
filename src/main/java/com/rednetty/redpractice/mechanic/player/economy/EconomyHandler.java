@@ -3,6 +3,7 @@ package com.rednetty.redpractice.mechanic.player.economy;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.player.GamePlayer;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
+import com.rednetty.redpractice.mechanic.player.bank.BankHandler;
 import com.rednetty.redpractice.utils.items.ItemBuilder;
 import com.rednetty.redpractice.utils.items.NBTEditor;
 import org.bukkit.ChatColor;
@@ -10,12 +11,18 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EconomyHandler extends Mechanics implements Listener {
 
+    public static ItemStack getGems(int Amount) {
+        return new ItemBuilder(Material.EMERALD).setAmount(Amount).setName("&aGem").setLore(Arrays.asList("&7The currency of Andalucia", "&7Deposit this in a bank for safekeeping")).build();
+    }
     /**
      * Used to generate a bank note
      *
@@ -78,6 +85,61 @@ public class EconomyHandler extends Mechanics implements Listener {
      */
     public static boolean hasEnoughInBank(int amount, GamePlayer gamePlayer) {
         return amount < gamePlayer.getGemAmount();
+    }
+
+
+    /**
+     * Correctly takes gems froma  players inventory
+     * @param amount - Amount you are taking
+     * @param player - PLayer you are taking it from
+     * @return - Returns the Amount you are taking
+     */
+    public static boolean takeGemsFromInventory(int amount, Player player) {
+        Inventory i = player.getInventory();
+        int amountLeft = 0;
+
+        HashMap<Integer, ? extends ItemStack> invItems = i.all(Material.EMERALD);
+        for (Map.Entry<Integer, ? extends ItemStack> entry : invItems.entrySet()) {
+            int index = entry.getKey();
+            ItemStack item = entry.getValue();
+            int stackAmount = item.getAmount();
+
+            if(amountLeft >= amount) {
+                return true;
+            }
+
+            if ((amountLeft+ stackAmount) <= amount) {
+                player.getInventory().setItem(index, new ItemStack(Material.AIR));
+                amountLeft += stackAmount;
+            } else {
+                int toTake = amount - amountLeft;
+                player.getInventory().setItem(index, getGems(stackAmount - toTake));
+                amountLeft += toTake;
+            }
+        }
+
+        HashMap<Integer, ? extends ItemStack> bankNote = i.all(Material.PAPER);
+        for (Map.Entry<Integer, ? extends ItemStack> entry : bankNote.entrySet()) {
+            ItemStack item = entry.getValue();
+            int noteAmount = getValue(item);
+            int index = entry.getKey();
+
+            if(amountLeft >= amount) {
+                return true;
+            }
+            if ((amountLeft + noteAmount) <= amount) {
+                player.getInventory().setItem(index, new ItemStack(Material.AIR));
+                amountLeft += noteAmount;
+            } else {
+                int toTake = amount - amountLeft;
+                amountLeft += toTake;
+                player.getInventory().setItem(index, createBankNote(noteAmount - toTake));
+            }
+            
+
+        }
+        return false;
+
     }
 
     /**

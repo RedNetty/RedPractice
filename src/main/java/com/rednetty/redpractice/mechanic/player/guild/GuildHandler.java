@@ -7,15 +7,20 @@ import com.rednetty.redpractice.mechanic.player.GamePlayer;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class GuildHandler extends Mechanics implements Listener{
+public class GuildHandler extends Mechanics implements Listener {
 
     private static ConcurrentHashMap<String, Guild> guildHashMap = new ConcurrentHashMap<>();
 
@@ -32,12 +37,13 @@ public class GuildHandler extends Mechanics implements Listener{
 
     /**
      * Get the Guild Instance from a String
-     * @apiNote - MUST BE USED ONLY IF THE GUILD IS LOADED!!
+     *
      * @param guildName - The Guild Name you are trying to get the Guild
      * @return - Returns either Null if it doesn't exist or the Guild
+     * @apiNote - MUST BE USED ONLY IF THE GUILD IS LOADED!!
      */
     public static Guild guildFromString(String guildName) {
-        if(guildHashMap.contains(guildName)) {
+        if (guildHashMap.contains(guildName)) {
             return guildHashMap.get(guildName);
         }
         return null;
@@ -46,6 +52,7 @@ public class GuildHandler extends Mechanics implements Listener{
     /**
      * Allows you to see if a Guild is Loaded by its name
      * Typically used to check if a Guild is loaded on the Players Data Loading
+     *
      * @param guildName - Name of the guild you are checking
      * @return - Returns true or false - True = Loaded | False = Not Loaded
      */
@@ -55,12 +62,37 @@ public class GuildHandler extends Mechanics implements Listener{
 
     /**
      * Allows you to check if a Player is in a Guild
+     *
      * @param player - The Player you want to check for
      * @return - Returns true or false
      */
     public static boolean isInAGuild(Player player) {
-        if(PlayerHandler.getGamePlayer(player).getGuildName() != "") return true;
+        if (PlayerHandler.getGamePlayer(player).getGuildName() != "") return true;
         return false;
+    }
+
+
+    /**
+     * Checks if a Player is officer of Specified Guild
+     * @param player - Player you're checking
+     * @param guild - Guild you're checking
+     * @return - Returns True or False
+     */
+    public static boolean isOfficer(Player player, Guild guild) {
+        for (OfflinePlayer officer : guild.getGuildOfficers()) {
+            if (officer == player)
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks the GuildConfigs if the Guild Exists
+     * @param guildName - Guild you are checking
+     * @return - Returns True or False
+     */
+    public static boolean guildExists(String guildName) {
+        return GuildConfigs.guildExists(guildName.toLowerCase());
     }
 
     /**
@@ -68,13 +100,13 @@ public class GuildHandler extends Mechanics implements Listener{
      * @param guildName - The name of the Guild
      */
     public static void loadGuild(String guildName) {
-        GuildConfigs.setupGuildConfig(guildName);
+        GuildConfigs.setupGuildConfig(guildName.toLowerCase());
         String guildTag = GuildConfigs.getGuildConfig(guildName).getString("Guild Tag");
         List<OfflinePlayer> memberList = new ArrayList<>();
-        GuildConfigs.getGuildConfig(guildName).getStringList("Guild Members").forEach(memberUUID -> memberList.add(Bukkit.getOfflinePlayer(UUID.fromString(guildName))));
+        GuildConfigs.getGuildConfig(guildName.toLowerCase()).getStringList("Guild Members").forEach(memberUUID -> memberList.add(Bukkit.getOfflinePlayer(UUID.fromString(guildName))));
         List<OfflinePlayer> officerList = new ArrayList<>();
-        GuildConfigs.getGuildConfig(guildName).getStringList("Guild Officers").forEach(memberUUID -> officerList.add(Bukkit.getOfflinePlayer(UUID.fromString(guildName))));
-        OfflinePlayer guildOwner = Bukkit.getOfflinePlayer(UUID.fromString(GuildConfigs.getGuildConfig(guildName).getString("Guild Owner")));
+        GuildConfigs.getGuildConfig(guildName.toLowerCase()).getStringList("Guild Officers").forEach(memberUUID -> officerList.add(Bukkit.getOfflinePlayer(UUID.fromString(guildName))));
+        OfflinePlayer guildOwner = Bukkit.getOfflinePlayer(UUID.fromString(GuildConfigs.getGuildConfig(guildName.toLowerCase()).getString("Guild Owner")));
         guildHashMap.put(guildName, new Guild(guildName, guildTag, memberList, officerList, guildOwner));
     }
 
@@ -107,22 +139,43 @@ public class GuildHandler extends Mechanics implements Listener{
      * @param player - Player you want to Demote
      */
     public void demotePlayer(Guild guild, Player player) {
-        List<OfflinePlayer> newOfficerList = new ArrayList<>();
-        guild.getGuildMembers().forEach(member -> { if(member != player) newOfficerList.add(member); });
-        guild.setGuildOfficers(newOfficerList);
+        guild.getGuildOfficers().remove(player);
+        guild.getGuildMembers().add(player);
         updateGuild(guild);
     }
 
+    /**
+     * Checks if a Guild Tag already exists
+     * @param guildTag - Guild tag you are checking for
+     * @return - Returns true or false
+     */
+    public static boolean tagExists(String guildTag) {
+        YamlConfiguration config = new YamlConfiguration();
+        File[] files = new File(RedPractice.getInstance().getDataFolder(), "GuildData").listFiles();
+        for(File file : files){
+            try {
+                config.load(file);
+                if(config.get("Guild Tag").equals(guildTag)){
+                    return true;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
     /**
      * Promotes a Player to Officer in a Guild
      * @param guild - Guild you want to Promote the Player in
      * @param player - Player you want to Promote
      */
     public void promotePlayer(Guild guild, Player player) {
-        List<OfflinePlayer> newOfficerList = new ArrayList<>();
-        guild.getGuildMembers().forEach(member -> newOfficerList.add(member));
-        newOfficerList.add(player);
-        guild.setGuildOfficers(newOfficerList);
+        guild.getGuildOfficers().add(player);
+        guild.getGuildMembers().remove(player);
         updateGuild(guild);
     }
 
@@ -132,11 +185,11 @@ public class GuildHandler extends Mechanics implements Listener{
      * @param guildName - Guild Name
      * @param guildTag - Tag of the Guild
      */
-    public void createGuild(Player guildOwner, String guildName, String guildTag) {
+    public static void createGuild(Player guildOwner, String guildName, String guildTag) {
         List<OfflinePlayer> guildMembers = new ArrayList<>();
         List<OfflinePlayer> guildOfficers = new ArrayList<>();
         guildHashMap.put(guildName, new Guild(guildName, guildTag, guildMembers, guildOfficers, guildOwner));
-        GuildConfigs.setupGuildConfig(guildName); //Adding the Config for the Guild
+        GuildConfigs.setupGuildConfig(guildName.toLowerCase()); //Adding the Config for the Guild
         GamePlayer gamePlayer = PlayerHandler.getGamePlayer(guildOwner);
         gamePlayer.setGuildName(guildName);
         PlayerHandler.updateGamePlayer(gamePlayer);

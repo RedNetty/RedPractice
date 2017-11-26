@@ -21,6 +21,13 @@ public class GuildConfigs {
         }
     }
 
+    public static boolean guildExists(String guildName) {
+        File file = new File(RedPractice.getInstance().getDataFolder() + "/GuildData", guildName + ".yml");
+        if (!file.exists()) {
+            return true;
+        }
+        return true;
+    }
 
     public static void setupGuildConfig(String guildName) {
         File file = new File(RedPractice.getInstance().getDataFolder() + "/GuildData", guildName + ".yml");
