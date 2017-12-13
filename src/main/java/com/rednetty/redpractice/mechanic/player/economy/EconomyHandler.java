@@ -1,5 +1,6 @@
 package com.rednetty.redpractice.mechanic.player.economy;
 
+import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.player.GamePlayer;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
@@ -17,10 +18,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class EconomyHandler extends Mechanics implements Listener {
 
-    public static ItemStack getGems(int Amount) {
+    public  ItemStack getGems(int Amount) {
         return new ItemBuilder(Material.EMERALD).setAmount(Amount).setName("&aGem").setLore(Arrays.asList("&7The currency of Andalucia", "&7Deposit this in a bank for safekeeping")).build();
     }
     /**
@@ -29,7 +31,7 @@ public class EconomyHandler extends Mechanics implements Listener {
      * @param amount - Amount you want the bank note to be
      * @return - Returns the Bank Note ItemStack
      */
-    public static ItemStack createBankNote(int amount) {
+    public  ItemStack createBankNote(int amount) {
         ItemStack itemStack = new ItemStack(Material.PAPER);
         NBTEditor nbtEditor = new NBTEditor(itemStack);
         nbtEditor.check();
@@ -44,7 +46,7 @@ public class EconomyHandler extends Mechanics implements Listener {
      * @param itemStack - Item you want to check
      * @return - Returns Value of Gems
      */
-    public static int getValue(ItemStack itemStack) {
+    public  int getValue(ItemStack itemStack) {
         int amount = 0;
         switch (itemStack.getType()) {
             case PAPER:
@@ -63,10 +65,11 @@ public class EconomyHandler extends Mechanics implements Listener {
      *
      * @return - Returns True or False if the player does have enough gems
      */
-    public static boolean hasEnoughOnPerson(int amount, GamePlayer gamePlayer) {
+    public  boolean hasEnoughOnPerson(int amount, GamePlayer gamePlayer) {
         Player player = gamePlayer.getPlayer();
         int gemCount = 0;
         for (ItemStack itemStack : player.getInventory().getContents()) {
+            if(itemStack == null) continue;
             if (itemStack.getType() == Material.EMERALD) gemCount += itemStack.getAmount();
             if (itemStack.getType() == Material.PAPER) {
                 NBTEditor nbtEditor = new NBTEditor(itemStack);
@@ -74,8 +77,7 @@ public class EconomyHandler extends Mechanics implements Listener {
                 if (nbtEditor.hasKey("value")) gemCount += nbtEditor.getInteger("value");
             }
 
-        }
-        return amount < gemCount;
+        }        return amount > gemCount;
     }
 
     /**
@@ -83,7 +85,7 @@ public class EconomyHandler extends Mechanics implements Listener {
      *
      * @return - Returns True or False if the player does have enough gems
      */
-    public static boolean hasEnoughInBank(int amount, GamePlayer gamePlayer) {
+    public  boolean hasEnoughInBank(int amount, GamePlayer gamePlayer) {
         return amount < gamePlayer.getGemAmount();
     }
 
@@ -94,7 +96,7 @@ public class EconomyHandler extends Mechanics implements Listener {
      * @param player - PLayer you are taking it from
      * @return - Returns the Amount you are taking
      */
-    public static boolean takeGemsFromInventory(int amount, Player player) {
+    public  boolean takeGemsFromInventory(int amount, Player player) {
         Inventory i = player.getInventory();
         int amountLeft = 0;
 
@@ -148,12 +150,12 @@ public class EconomyHandler extends Mechanics implements Listener {
      * @param amount     - The amount you wanna add to a player
      * @param gamePlayer -  The player you wanna add it to
      */
-    public static void depositGems(int amount, GamePlayer gamePlayer) {
+    public  void depositGems(int amount, GamePlayer gamePlayer) {
         gamePlayer.setGemAmount(gamePlayer.getGemAmount() + amount);
         Player player = gamePlayer.getPlayer();
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
-        player.sendMessage(ChatColor.GREEN.toString() + ChatColor.GREEN + "New Balance: " + ChatColor.GREEN + PlayerHandler.getGamePlayer(player).getGemAmount() + " Gem(s)");
-        PlayerHandler.updateGamePlayer(gamePlayer);
+        player.sendMessage(ChatColor.GREEN.toString() + ChatColor.GREEN + "New Balance: " + ChatColor.GREEN + gamePlayer.getGemAmount() + " Gem(s)");
+        RedPractice.getMechanicManager().getPlayerHandler().updateGamePlayer(gamePlayer);
     }
 
     /**
@@ -162,12 +164,13 @@ public class EconomyHandler extends Mechanics implements Listener {
      * @param amount     - The amount you wanna remove from a player
      * @param gamePlayer -  The player you wanna remove it from
      */
-    public static void withdrawGems(int amount, GamePlayer gamePlayer) {
+    public  void withdrawGems(int amount, GamePlayer gamePlayer) {
+
         gamePlayer.setGemAmount(gamePlayer.getGemAmount() - amount);
         Player player = gamePlayer.getPlayer();
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
-        player.sendMessage(ChatColor.GREEN.toString() + ChatColor.GREEN + "New Balance: " + ChatColor.GREEN + PlayerHandler.getGamePlayer(player).getGemAmount() + " Gem(s)");
-        PlayerHandler.updateGamePlayer(gamePlayer);
+        player.sendMessage(ChatColor.GREEN.toString() + ChatColor.GREEN + "New Balance: " + ChatColor.GREEN + gamePlayer.getGemAmount() + " Gem(s)");
+        RedPractice.getMechanicManager().getPlayerHandler().updateGamePlayer(gamePlayer);
     }
 
     public void onEnable() {

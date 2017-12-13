@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 
 public class RankChangeEvent extends Event {
 
-    private static final HandlerList handlers = new HandlerList();
+    private  final HandlerList handlers = new HandlerList();
     private CommandSender  setter;
     private Player target;
     private String rank;
@@ -21,7 +21,7 @@ public class RankChangeEvent extends Event {
         return handlers;
     }
 
-    public static HandlerList getHandlerList() {
+    public  HandlerList getHandlerList() {
         return handlers;
     }
 

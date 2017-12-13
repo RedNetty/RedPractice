@@ -11,24 +11,7 @@ public class GamePlayer {
     private Inventory bankInventory;
     private int bankSize;
     private String playerRank;
-    private String guildName;
     private PermissionAttachment permissions;
-
-    /**
-     * Allows you to get a Players Guild
-     * @return - Returns Guild Name
-     */
-    public String getGuildName() {
-        return guildName;
-    }
-
-    /**
-     * Allows you to change a Players Guild Name
-     * @param guildName - Name of Guild
-     */
-    public void setGuildName(String guildName) {
-        this.guildName = guildName;
-    }
 
     /**
      * Used to get the Player

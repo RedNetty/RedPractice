@@ -11,7 +11,7 @@ public class CommandManager {
     /**
      * Register your commands here they will automatically register in the main class
      */
-    public static void registerCommands() {
+    public void registerCommands() {
         RedPractice.getInstance().getCommand("practicereload").setExecutor(new ReloadCommand());
         RedPractice.getInstance().getCommand("setrank").setExecutor(new SetRankCommand());
         RedPractice.getInstance().getCommand("gl").setExecutor(new GlobalCommand());

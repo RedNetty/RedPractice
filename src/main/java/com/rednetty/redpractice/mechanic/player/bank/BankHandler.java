@@ -1,5 +1,6 @@
 package com.rednetty.redpractice.mechanic.player.bank;
 
+import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.player.GamePlayer;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
@@ -50,6 +51,7 @@ public class BankHandler extends Mechanics implements Listener {
      * Updates the Players Bank Correctly and Updates the Inventory to Move Items over
      */
     public void updateBankSize(GamePlayer gamePlayer) {
+        PlayerHandler playerHandler = RedPractice.getMechanicManager().getPlayerHandler();
         gamePlayer.setBankSize(gamePlayer.getBankSize() + 9);
         Inventory inventory = Bukkit.createInventory(null, gamePlayer.getBankSize() + 9, gamePlayer.getPlayer().getName() + "'s Bank (1/1)");
         for (ItemStack itemStack : gamePlayer.getBankInventory().getContents()) {
@@ -57,7 +59,7 @@ public class BankHandler extends Mechanics implements Listener {
                 inventory.addItem(itemStack);
         }
         gamePlayer.setBankInventory(inventory);
-        PlayerHandler.updateGamePlayer(gamePlayer);
+        playerHandler.updateGamePlayer(gamePlayer);
     }
 
     /**
@@ -114,12 +116,13 @@ public class BankHandler extends Mechanics implements Listener {
      */
     @EventHandler
     public void onBankOpen(InventoryOpenEvent event) {
+        PlayerHandler playerHandler = RedPractice.getMechanicManager().getPlayerHandler();
         if (event.getInventory().getType() == InventoryType.ENDER_CHEST) {
             event.setCancelled(true);
             if (event.getPlayer() instanceof Player) {
                 Player player = (Player) event.getPlayer();
                 player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1F, 1F);
-                player.openInventory(getBank(PlayerHandler.getGamePlayer(player)));
+                player.openInventory(getBank(playerHandler.getGamePlayer(player)));
             }
         }
     }
@@ -129,25 +132,27 @@ public class BankHandler extends Mechanics implements Listener {
      */
     @EventHandler
     public void onInventoryInteract(InventoryClickEvent event) {
+        EconomyHandler economyHandler = RedPractice.getMechanicManager().getEconomyHandler();
+        PlayerHandler playerHandler = RedPractice.getMechanicManager().getPlayerHandler();
         if (event.getView().getTopInventory().getTitle().contains("Bank")) {
             if (event.getWhoClicked() instanceof Player) {
                 Player player = (Player) event.getWhoClicked();
-                GamePlayer gamePlayer = PlayerHandler.getGamePlayer(player);
+                GamePlayer gamePlayer = playerHandler.getGamePlayer(player);
                 if (event.isShiftClick() && event.getCurrentItem() != null) { // Deals with when it is Shift Clicked in
                     ItemStack itemStack = event.getCurrentItem();
-                    int amount = EconomyHandler.getValue(itemStack);
+                    int amount = economyHandler.getValue(itemStack);
                     if (amount > 0) {
                         event.setCancelled(true);
-                        EconomyHandler.depositGems(amount, PlayerHandler.getGamePlayer(player));
+                        economyHandler.depositGems(amount, playerHandler.getGamePlayer(player));
                         event.setCurrentItem(null);
                         updateBankGem(gamePlayer, event.getView().getTopInventory());
                     }
                 }
                 if (!event.isShiftClick() && event.getCursor() != null) { // Deals with when it is placed in.
                     ItemStack itemStack = event.getCursor();
-                    int amount = EconomyHandler.getValue(itemStack);
+                    int amount = economyHandler.getValue(itemStack);
                     if (amount > 0) {
-                        EconomyHandler.depositGems(amount, PlayerHandler.getGamePlayer(player));
+                        economyHandler.depositGems(amount, playerHandler.getGamePlayer(player));
                         event.setCursor(null);
                         player.updateInventory();
                         updateBankGem(gamePlayer, event.getView().getTopInventory());
@@ -173,8 +178,9 @@ public class BankHandler extends Mechanics implements Listener {
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        PlayerHandler playerHandler = RedPractice.getMechanicManager().getPlayerHandler();
         if (event.getAction() == Action.LEFT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.ENDER_CHEST) {
-            GamePlayer gamePlayer = PlayerHandler.getGamePlayer(player);
+            GamePlayer gamePlayer = playerHandler.getGamePlayer(player);
             if (upgradingMap.containsKey(player)) return;
 
             if (gamePlayer.getBankSize() >= 54) {
@@ -202,16 +208,18 @@ public class BankHandler extends Mechanics implements Listener {
     public void chatEvent(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage().toLowerCase();
+        EconomyHandler economyHandler = RedPractice.getMechanicManager().getEconomyHandler();
+        PlayerHandler playerHandler = RedPractice.getMechanicManager().getPlayerHandler();
         if (upgradingMap.containsKey(player)) {
             event.setCancelled(true);
-            if (!message.contains("confirm") || !EconomyHandler.hasEnoughInBank(upgradingMap.get(player), PlayerHandler.getGamePlayer(player))) {
+            if (!message.contains("confirm") || !economyHandler.hasEnoughInBank(upgradingMap.get(player), playerHandler.getGamePlayer(player))) {
                 player.sendMessage(ChatColor.RED + "Bank upgrade cancelled");
                 player.sendMessage(ChatColor.RED + "You either cancelled the upgrade or do not have enough money.");
             }
             if (message.contains("confirm")) {
                 StringUtil.sendCenteredMessage(player, ChatColor.translateAlternateColorCodes('&', "&a&l*** &a&lBANK UPGRADE COMPLETE ***"));
-                updateBankSize(PlayerHandler.getGamePlayer(player));
-                EconomyHandler.withdrawGems(upgradingMap.get(player), PlayerHandler.getGamePlayer(player));
+                updateBankSize(playerHandler.getGamePlayer(player));
+                economyHandler.withdrawGems(upgradingMap.get(player), playerHandler.getGamePlayer(player));
 
             }
             upgradingMap.remove(player);
@@ -224,9 +232,9 @@ public class BankHandler extends Mechanics implements Listener {
             } catch (NumberFormatException e) {
                 player.sendMessage(ChatColor.RED + "You have cancelled your WITHDRAW.");
             }
-            if (EconomyHandler.hasEnoughInBank(noteAmount, PlayerHandler.getGamePlayer(player))) {
-                EconomyHandler.withdrawGems(noteAmount, PlayerHandler.getGamePlayer(player));
-                player.getInventory().addItem(EconomyHandler.createBankNote(noteAmount));
+            if (economyHandler.hasEnoughInBank(noteAmount, playerHandler.getGamePlayer(player))) {
+                economyHandler.withdrawGems(noteAmount, playerHandler.getGamePlayer(player));
+                player.getInventory().addItem(economyHandler.createBankNote(noteAmount));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERDRAGON_FLAP, 1.0f, 1.2f);
             } else {
                 player.sendMessage(ChatColor.RED + "Please enter a NUMBER, the amount you'd like to WITHDRAW from your bank account. Or type 'cancel' to void the withdrawl.");

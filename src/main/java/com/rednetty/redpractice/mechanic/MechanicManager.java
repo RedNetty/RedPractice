@@ -1,23 +1,20 @@
 package com.rednetty.redpractice.mechanic;
 
+import com.rednetty.redpractice.mechanic.player.economy.EconomyHandler;
 import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
 import com.rednetty.redpractice.mechanic.player.bank.BankHandler;
 import com.rednetty.redpractice.mechanic.player.chat.ChatHandler;
-import lombok.Getter;
 
 import java.util.stream.Stream;
 
 public class MechanicManager {
 
-    @Getter
     private PlayerHandler playerHandler;
-    @Getter
     private ChatHandler chatHandler;
-    @Getter
     private ModerationHandler moderationHandler;
-    @Getter
     private BankHandler bankHandler;
+    private EconomyHandler economyHandler;
 
 
     /**
@@ -29,7 +26,8 @@ public class MechanicManager {
                 playerHandler = new PlayerHandler(),
                 moderationHandler = new ModerationHandler(),
                 bankHandler = new BankHandler(),
-                chatHandler = new ChatHandler()
+                chatHandler = new ChatHandler(),
+                economyHandler = new EconomyHandler()
         ).forEach(manager -> manager.onEnable());
     }
 
@@ -42,7 +40,34 @@ public class MechanicManager {
                 playerHandler,
                 moderationHandler,
                 bankHandler,
-                chatHandler
+                chatHandler,
+                economyHandler
         ).forEach(manager -> manager.onDisable());
+    }
+
+
+    /**
+     * Get the Handlers
+     * @return - Returns the Class of the Handlers
+     */
+
+    public BankHandler getBankHandler() {
+        return bankHandler;
+    }
+
+    public ChatHandler getChatHandler() {
+        return chatHandler;
+    }
+
+    public ModerationHandler getModerationHandler() {
+        return moderationHandler;
+    }
+
+    public PlayerHandler getPlayerHandler() {
+        return playerHandler;
+    }
+
+    public EconomyHandler getEconomyHandler() {
+        return economyHandler;
     }
 }

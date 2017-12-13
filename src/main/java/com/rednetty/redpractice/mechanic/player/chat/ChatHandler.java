@@ -1,9 +1,9 @@
 package com.rednetty.redpractice.mechanic.player.chat;
 
 import com.rednetty.redpractice.RedPractice;
+import com.rednetty.redpractice.mechanic.MechanicManager;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
-import com.rednetty.redpractice.mechanic.player.guild.GuildHandler;
 import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.utils.JSONMessage;
 import org.bukkit.ChatColor;
@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +36,9 @@ public class ChatHandler extends Mechanics implements Listener {
      * @param player - The Player you are trying to get it for
      * @return - Returns the Prefixes/Tags
      */
-    public static String getFullTag(Player player) {
-        String guildTag = "";
-        if(GuildHandler.isInAGuild(player)) {
-            guildTag = "[" + GuildHandler.guildFromString(PlayerHandler.getGamePlayer(player).getGuildName()).getGuildTag() + "] ";
-        }
-        return ChatColor.WHITE.toString() + guildTag + ModerationHandler.getNameTag(PlayerHandler.getGamePlayer(player).getPlayerRank());
+    public  String getFullTag(Player player) {
+        MechanicManager mechanicManager = RedPractice.getMechanicManager();
+        return mechanicManager.getModerationHandler().getNameTag(mechanicManager.getPlayerHandler().getGamePlayer(player).getPlayerRank());
     }
 
 
@@ -54,7 +50,7 @@ public class ChatHandler extends Mechanics implements Listener {
      * @param message    - The message the sender sent
      * @param itemStack  - ItemStack the sender is trying to show
      */
-    public static void sendShowMessage(Player sender, Set<Player> recipients, String prefix, String message, ItemStack itemStack) {
+    public void sendShowMessage(Player sender, Set<Player> recipients, String prefix, String message, ItemStack itemStack) {
         if (itemStack != null && itemStack.getType() != Material.AIR) {
             String[] splitMessage = message.split("@i@");
             String beforeItem = "";

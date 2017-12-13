@@ -1,5 +1,6 @@
 package com.rednetty.redpractice.commands.chat;
 
+import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.player.GamePlayer;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
@@ -21,6 +22,7 @@ public class GlobalCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (commandSender.hasPermission("practice.globalchat") && commandSender instanceof Player) {
+            ChatHandler chatHandler = RedPractice.getMechanicManager().getChatHandler();
             Player player = (Player) commandSender;
             Set<Player> recipients = new HashSet<>(Bukkit.getOnlinePlayers());
             String globalPrefix = "&b<&lG&r&b> "; /*Used to Determine what Prefix to use*/
@@ -29,9 +31,9 @@ public class GlobalCommand implements CommandExecutor {
             if (lowerCase.contains("wts") || lowerCase.contains("wtb") || lowerCase.contains("trading") || lowerCase.contains("buying")) {
                 globalPrefix = "&a<&lT&r&a> ";
             }
-            String beforeMessage = ChatColor.translateAlternateColorCodes('&', globalPrefix + ChatHandler.getFullTag(player) + "&7" + player.getName() + ": &f");
+            String beforeMessage = ChatColor.translateAlternateColorCodes('&', globalPrefix + chatHandler.getFullTag(player) + "&7" + player.getName() + ": &f");
             if (lowerCase.contains("@i@") && player.getInventory().getItemInMainHand().getType() != Material.AIR) { /*If player is trying to show a Item Display it with the Method Below*/
-                ChatHandler.sendShowMessage(player, recipients, globalPrefix + ChatHandler.getFullTag(player), fullMessage, player.getInventory().getItemInMainHand());
+                chatHandler.sendShowMessage(player, recipients, globalPrefix + chatHandler.getFullTag(player), fullMessage, player.getInventory().getItemInMainHand());
             } else {
                 for (Player target : recipients) {
                     target.sendMessage(beforeMessage + fullMessage);

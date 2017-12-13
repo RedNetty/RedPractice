@@ -17,10 +17,6 @@ public class ReloadCommand implements CommandExecutor {
         if(commandSender.hasPermission("practice.reload")) {
             PermissionConfig.reloadConfig();
             RankConfig.reloadConfig();
-            if(commandSender instanceof Player) {
-                Player player = (Player)commandSender;
-                player.openInventory(RedPractice.getMechanicManager().getBankHandler().getBank(PlayerHandler.getGamePlayer(player)));
-            }
         }
         return false;
 

@@ -4,7 +4,6 @@ import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.configs.PlayerConfigs;
 import com.rednetty.redpractice.configs.RankConfig;
 import com.rednetty.redpractice.mechanic.Mechanics;
-import com.rednetty.redpractice.mechanic.player.guild.GuildHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -25,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlayerHandler extends Mechanics implements Listener {
 
     /*Hashmap that stores GamePlayer instances temporarily*/
-    public static Map<Player, GamePlayer> gamePlayerHashMap = new ConcurrentHashMap<>();
+    public  Map<Player, GamePlayer> gamePlayerHashMap = new ConcurrentHashMap<>();
 
 
     @Override
@@ -53,7 +52,7 @@ public class PlayerHandler extends Mechanics implements Listener {
      *
      * @param player - Requires you to specify a SpigotAPI Player
      */
-    public static void generatePlayerConfig(Player player) {
+    public void generatePlayerConfig(Player player) {
         FileConfiguration fileConfig = PlayerConfigs.getPlayerConfig(player.getUniqueId());
         if (!fileConfig.isSet("Gems")) fileConfig.set("Gems", 0);
         if(!fileConfig.isSet("Guild Name")) fileConfig.set("Guild Name", "");
@@ -70,10 +69,9 @@ public class PlayerHandler extends Mechanics implements Listener {
      *
      * @param player - Player data that needs saving
      */
-    public static void saveGamePlayer(Player player) {
+    public  void saveGamePlayer(Player player) {
         FileConfiguration fileConfig = PlayerConfigs.getPlayerConfig(player.getUniqueId());
         fileConfig.set("Gems", getGamePlayer(player).getGemAmount());
-        fileConfig.set("Guild Name", getGamePlayer(player).getGuildName());
         fileConfig.set("Bank Size", getGamePlayer(player).getBankSize());
         fileConfig.set("Bank Inventory", getGamePlayer(player).getBankInventory().getContents());
         RankConfig.getConfig().set(player.getUniqueId().toString(), getGamePlayer(player).getPlayerRank().toString());
@@ -97,7 +95,7 @@ public class PlayerHandler extends Mechanics implements Listener {
      * Loads the Data of a Player Correctly
      * @param player - The player you want to load Data
      */
-    public static void loadPlayer(Player player) {
+    public  void loadPlayer(Player player) {
         PlayerConfigs.setupPlayerConfig(player.getUniqueId());
         generatePlayerConfig(player);
         FileConfiguration fileConfig = PlayerConfigs.getPlayerConfig(player.getUniqueId());
@@ -112,9 +110,6 @@ public class PlayerHandler extends Mechanics implements Listener {
             loadBankItems(fileConfig).forEach(itemStack -> {
                 if(itemStack != null && itemStack.getType() != Material.EMERALD && itemStack.getType() != Material.THIN_GLASS) inventory.addItem(itemStack);
             });
-        }
-        if(!GuildHandler.isGuildLoaded(guildName)) {
-            GuildHandler.loadGuild(guildName);
         }
         GamePlayer gamePlayer = new GamePlayer(player, playerRank, gemBalance, inventory, bankSize);
         gamePlayerHashMap.put(player, gamePlayer);
@@ -136,12 +131,12 @@ public class PlayerHandler extends Mechanics implements Listener {
      *  Used to update Player Data
      * @param gamePlayer - Instance of the GamePlayer class that is stored in the HashMap above
      */
-    public static void updateGamePlayer(GamePlayer gamePlayer) {
+    public  void updateGamePlayer(GamePlayer gamePlayer) {
         gamePlayerHashMap.put(gamePlayer.getPlayer(), gamePlayer);
     }
 
     /*Returns instance of the GamePlayer of this Player*/
-    public static GamePlayer getGamePlayer(Player player) {
+    public GamePlayer getGamePlayer(Player player) {
         if(!gamePlayerHashMap.containsKey(player)) loadPlayer(player);
         return gamePlayerHashMap.get(player);
     }
@@ -152,7 +147,7 @@ public class PlayerHandler extends Mechanics implements Listener {
      *
      * @return Returns a ItemStack[] that is used to add the items into the invenntory
      */
-    public static  ArrayList<ItemStack> loadBankItems(FileConfiguration fileConfig) {
+    public ArrayList<ItemStack> loadBankItems(FileConfiguration fileConfig) {
         ArrayList<ItemStack> content = (ArrayList<ItemStack>) fileConfig.getList("Bank Inventory");
         for (int i = 0; i < content.size(); i++) {
             ItemStack item = content.get(i);

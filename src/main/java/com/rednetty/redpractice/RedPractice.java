@@ -16,23 +16,27 @@ public class RedPractice extends JavaPlugin{
     /**
      * Instance of Main Class
      * */
-    @Getter
     private static RedPractice instance;
 
     /**
      * used to receive instance of the mechanicManager class.
      */
-    @Getter
     private static MechanicManager mechanicManager;
+
+
+    private static CommandManager commandManager;
 
 
     @Override
     public void onEnable() {
         instance = this; /*Sets instanceof RedPractice as this class*/
         mechanicManager = new MechanicManager();
+        commandManager = new CommandManager();
         mechanicManager.init();
-        CommandManager.registerCommands();
+        commandManager.registerCommands();
+
         this.getConfig().options().copyDefaults(true);
+        this.saveConfig();
     }
 
     @Override
@@ -40,5 +44,18 @@ public class RedPractice extends JavaPlugin{
         mechanicManager.stop();
 
 
+    }
+
+
+    public static RedPractice getInstance() {
+        return instance;
+    }
+
+    public static MechanicManager getMechanicManager() {
+        return mechanicManager;
+    }
+
+    public static CommandManager getCommandManager() {
+        return commandManager;
     }
 }
