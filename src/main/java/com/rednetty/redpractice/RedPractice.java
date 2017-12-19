@@ -2,10 +2,9 @@ package com.rednetty.redpractice;
 
 import com.rednetty.redpractice.commands.CommandManager;
 import com.rednetty.redpractice.mechanic.MechanicManager;
-import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class RedPractice extends JavaPlugin{
+public class RedPractice extends JavaPlugin {
 
     /**
      * @author Jackson(Red29)
@@ -15,7 +14,7 @@ public class RedPractice extends JavaPlugin{
 
     /**
      * Instance of Main Class
-     * */
+     */
     private static RedPractice instance;
 
     /**
@@ -26,6 +25,17 @@ public class RedPractice extends JavaPlugin{
 
     private static CommandManager commandManager;
 
+    public static RedPractice getInstance() {
+        return instance;
+    }
+
+    public static MechanicManager getMechanicManager() {
+        return mechanicManager;
+    }
+
+    public static CommandManager getCommandManager() {
+        return commandManager;
+    }
 
     @Override
     public void onEnable() {
@@ -44,18 +54,5 @@ public class RedPractice extends JavaPlugin{
         mechanicManager.stop();
 
 
-    }
-
-
-    public static RedPractice getInstance() {
-        return instance;
-    }
-
-    public static MechanicManager getMechanicManager() {
-        return mechanicManager;
-    }
-
-    public static CommandManager getCommandManager() {
-        return commandManager;
     }
 }

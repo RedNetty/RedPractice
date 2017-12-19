@@ -7,8 +7,8 @@ import org.bukkit.event.HandlerList;
 
 public class RankChangeEvent extends Event {
 
-    private  final HandlerList handlers = new HandlerList();
-    private CommandSender  setter;
+    private static final HandlerList handlers = new HandlerList();
+    private CommandSender setter;
     private Player target;
     private String rank;
 
@@ -17,16 +17,18 @@ public class RankChangeEvent extends Event {
         this.setter = setter;
         this.rank = rank;
     }
-    public HandlerList getHandlers() {
+
+    public static HandlerList getHandlerList() {
         return handlers;
     }
 
-    public  HandlerList getHandlerList() {
+    public HandlerList getHandlers() {
         return handlers;
     }
 
     /**
      * Used to get the RankEnum that was just set
+     *
      * @return - Returns the Rank that was set by the setter
      */
     public String getRank() {
@@ -35,6 +37,7 @@ public class RankChangeEvent extends Event {
 
     /**
      * Allows you to set the rank before it is handled
+     *
      * @param rank- Requires a Enum from the EnumClass RankEnum
      */
     public void setRank(String rank) {
@@ -43,14 +46,16 @@ public class RankChangeEvent extends Event {
 
     /**
      * Returns the person setting the Rank of the Target
+     *
      * @return - Returns instance of Player that attempted to Set the Rank
      */
-    public CommandSender  getSetter() {
+    public CommandSender getSetter() {
         return setter;
     }
 
     /**
      * The Target would the the Person being Targeted and rank being set
+     *
      * @return - Returns the player that was targeted when the event was called.
      */
     public Player getTarget() {

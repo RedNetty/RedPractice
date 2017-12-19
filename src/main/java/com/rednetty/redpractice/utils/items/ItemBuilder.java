@@ -21,6 +21,7 @@ public class ItemBuilder {
 
     /**
      * Starts the ItemBuilder
+     *
      * @param material - Requires a Bukkit Material Enum
      */
     public ItemBuilder(Material material) {
@@ -30,6 +31,7 @@ public class ItemBuilder {
 
     /**
      * Starts the ItemBuilder (Allows Editing of ItemStacks)
+     *
      * @param itemStack - Requires a Bukkit ItemStack
      */
     public ItemBuilder(ItemStack itemStack) {
@@ -39,6 +41,7 @@ public class ItemBuilder {
 
     /**
      * Used to add Lore to a Item
+     *
      * @param lore - This takes a List<String> and allows you to add multiple lines of Lore on a Item
      * @returns - This returns the ItemBuilder so you can keep building onto the ItemBuilder
      */
@@ -50,6 +53,7 @@ public class ItemBuilder {
 
     /**
      * Used to set the Name of a item
+     *
      * @param name - This takes a String and allows you to set the displayName() on a Item
      * @returns - This returns the ItemBuilder so you can keep building onto the ItemBuilder
      */
@@ -59,9 +63,9 @@ public class ItemBuilder {
     }
 
 
-
     /**
      * Used to set the amount of a item
+     *
      * @param amount - This takes a int and allows you to set the amount of the item (UP TO 64)
      * @returns - This returns the ItemBuilder so you can keep building onto the ItemBuilder
      */
@@ -73,6 +77,7 @@ public class ItemBuilder {
 
     /**
      * Used to set the durability on a item
+     *
      * @param durability - Takes a short to set the durability on a item
      * @returns - This returns the ItemBuilder so you can keep building onto the ItemBuilder
      */
@@ -83,6 +88,7 @@ public class ItemBuilder {
 
     /**
      * Builds the Item after what you've decided to add/change and returns a itemStack
+     *
      * @returns - Returns the Finished Item Stack
      */
     public ItemStack build() {

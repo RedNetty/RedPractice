@@ -20,7 +20,7 @@ public class RankConfig {
                 file.createNewFile();
             }
 
-        }catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         fileConfig = YamlConfiguration.loadConfiguration(file);
@@ -34,7 +34,7 @@ public class RankConfig {
     public static void saveConfig() {
         try {
             fileConfig.save(file);
-        }catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

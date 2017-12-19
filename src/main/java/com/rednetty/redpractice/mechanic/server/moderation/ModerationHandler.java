@@ -6,7 +6,6 @@ import com.rednetty.redpractice.configs.RankConfig;
 import com.rednetty.redpractice.events.RankChangeEvent;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.player.GamePlayer;
-import com.rednetty.redpractice.mechanic.player.PlayerHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -16,45 +15,39 @@ import org.bukkit.event.Listener;
 
 public class ModerationHandler extends Mechanics implements Listener {
 
-    private Rank rank = new Rank();
 
-    public Rank getRank() {
-        return rank;
+    /**
+     * Used to grab the Display Tag for the Players Rank
+     *
+     * @return - Returns the Display Tag that is shown ingame for the rank
+     */
+    public static String getNameTag(String rank) {
+        return ChatColor.translateAlternateColorCodes('&', Rank.getPrefix(rank));
     }
 
     @Override
     public void onEnable() {
+        listener(this);
         PermissionConfig.setupConfig();
         RankConfig.setupConfig();
-        rank.loadRankList(); //Has to be after Permission Config due to its usages
-        listener(this);
+        Rank.loadRankList(); //Has to be after Permission Config due to its usages
     }
 
     @Override
     public void onDisable() {
     }
 
-
-
-    /**
-     * Used to grab the Display Tag for the Players Rank
-     * @return - Returns the Display Tag that is shown ingame for the rank
-     */
-    public  String getNameTag(String rank) {
-        return ChatColor.translateAlternateColorCodes('&', getRank().getPrefix(rank));
-    }
-
     /*Deals with when a players rank is changed*/
     @EventHandler
     public void onRankChange(RankChangeEvent event) {
-        PlayerHandler playerHandler = RedPractice.getMechanicManager().getPlayerHandler();
+
         CommandSender setter = event.getSetter();
         Player target = event.getTarget();
-        GamePlayer gamePlayer = playerHandler.getGamePlayer(target);
+        GamePlayer gamePlayer = RedPractice.getMechanicManager().getPlayerHandler().getGamePlayer(target);
         setter.sendMessage(ChatColor.GREEN + "You set " + target.getName() + "'s rank to " + getNameTag(event.getRank()));
-        target.sendMessage(ChatColor.GREEN + "Your rank was set to " +  getNameTag(event.getRank()));
+        target.sendMessage(ChatColor.GREEN + "Your rank was set to " + getNameTag(event.getRank()));
         gamePlayer.setPlayerRank(event.getRank());
-        playerHandler.updateGamePlayer(gamePlayer);
+        RedPractice.getMechanicManager().getPlayerHandler().updateGamePlayer(gamePlayer);
         updatePermission(target);
     }
 
@@ -63,10 +56,9 @@ public class ModerationHandler extends Mechanics implements Listener {
      * Updates the players permissions based on the Permissions set inside the Config
      */
     public void updatePermission(Player player) {
-        PlayerHandler playerHandler = RedPractice.getMechanicManager().getPlayerHandler();
-        GamePlayer gamePlayer = playerHandler.getGamePlayer(player);
+        GamePlayer gamePlayer = RedPractice.getMechanicManager().getPlayerHandler().getGamePlayer(player);
         gamePlayer.setPermissions(player.addAttachment(RedPractice.getInstance()));
-        getRank().getRankPermissions(gamePlayer.getPlayerRank()).forEach(perm -> gamePlayer.getPermissions().setPermission(perm, true));
-        playerHandler.updateGamePlayer(gamePlayer);
+        Rank.getRankPermissions(gamePlayer.getPlayerRank()).forEach(perm -> gamePlayer.getPermissions().setPermission(perm, true));
+        RedPractice.getMechanicManager().getPlayerHandler().updateGamePlayer(gamePlayer);
     }
 }

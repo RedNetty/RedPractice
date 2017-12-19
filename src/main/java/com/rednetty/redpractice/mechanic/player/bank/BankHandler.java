@@ -87,12 +87,13 @@ public class BankHandler extends Mechanics implements Listener {
 
     /**
      * Updates the Players Bank Gem so that it shows the correct Value
+     *
      * @param gamePlayer - Gameplayer?
-     * @param inventory - The Inventory you are checking for (Should be a Bank) ??
+     * @param inventory  - The Inventory you are checking for (Should be a Bank) ??
      */
     public void updateBankGem(GamePlayer gamePlayer, Inventory inventory) {
         for (ItemStack itemStack : inventory.getContents()) {
-            if(itemStack != null && itemStack.getType() == Material.EMERALD) {
+            if (itemStack != null && itemStack.getType() == Material.EMERALD) {
                 itemStack.setItemMeta(gemItem(gamePlayer).getItemMeta());
             }
         }
@@ -159,7 +160,7 @@ public class BankHandler extends Mechanics implements Listener {
                     }
                 }
                 if (convertingNoteList.contains(player)) return;
-                if (event.getCurrentItem().getType() == Material.EMERALD || event.getCurrentItem().getType() == Material.THIN_GLASS) {
+                if (event.getCurrentItem().getType() == Material.EMERALD || event.getCurrentItem().getType() == Material.THIN_GLASS && event.getClickedInventory().getTitle().contains("Bank")) {
                     event.setCancelled(true);
                     if (event.getCurrentItem().getType() == Material.EMERALD) {
                         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&7Please enter the amount you'd like to CONVERT to a gem note. Alternatively, type &c'cancel' &7to void this operation"));

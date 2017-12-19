@@ -11,3 +11,7 @@ commands:
   gl:
     aliases: <global>
     permission: practice.globalchat
+  heal:
+    permission: practice.heal
+  spawnmob:
+  randomgear:

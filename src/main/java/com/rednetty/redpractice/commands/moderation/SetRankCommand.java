@@ -1,6 +1,5 @@
 package com.rednetty.redpractice.commands.moderation;
 
-import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.events.RankChangeEvent;
 import com.rednetty.redpractice.mechanic.server.moderation.Rank;
 import org.bukkit.Bukkit;
@@ -26,7 +25,7 @@ public class SetRankCommand implements CommandExecutor {
                 return false;
 
             }
-            if(!RedPractice.getMechanicManager().getModerationHandler().getRank().rankExists(args[1])) {
+            if (!Rank.rankExists(args[1])) {
                 sender.sendMessage(ChatColor.RED + "Rank doesn't exist.");
                 return false;
             }

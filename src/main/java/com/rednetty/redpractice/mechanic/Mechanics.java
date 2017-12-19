@@ -5,7 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 
-public class Mechanics  {
+public class Mechanics {
 
 
     /**
@@ -24,9 +24,10 @@ public class Mechanics  {
     }
 
     /**
-     *  This will initialize when it is called
+     * This will initialize when it is called
+     *
      * @param listener - Listener is what is used in the SpigotAPI to Listen for Events, implement your class with a Listener and call that here.
-     *  The best place to put this would be onEnable
+     *                 The best place to put this would be onEnable
      */
     protected void listener(Listener listener) {
         Bukkit.getServer().getPluginManager().registerEvents(listener, RedPractice.getInstance());

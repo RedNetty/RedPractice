@@ -4,7 +4,6 @@ import com.rednetty.redpractice.RedPractice;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class PlayerConfigs {
         if (!file.exists()) {
             try {
                 file.createNewFile();
-            }catch(IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -38,17 +37,17 @@ public class PlayerConfigs {
 
 
     public static FileConfiguration getPlayerConfig(UUID playerID) {
-        if(!playerFileConfigMap.containsKey(playerID)) setupPlayerConfig(playerID);
+        if (!playerFileConfigMap.containsKey(playerID)) setupPlayerConfig(playerID);
         return playerFileConfigMap.get(playerID);
     }
 
     public static void savePlayerConfig(UUID playerID) {
-        if(!playerFileConfigMap.containsKey(playerID)) setupPlayerConfig(playerID);
+        if (!playerFileConfigMap.containsKey(playerID)) setupPlayerConfig(playerID);
         try {
             File file = new File(RedPractice.getInstance().getDataFolder() + "/PlayerData", playerID.toString() + ".yml");
             FileConfiguration fileConfiguration = playerFileConfigMap.get(playerID);
             fileConfiguration.save(file);
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

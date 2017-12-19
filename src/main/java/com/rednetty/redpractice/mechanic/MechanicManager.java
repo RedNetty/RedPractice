@@ -1,10 +1,14 @@
 package com.rednetty.redpractice.mechanic;
 
-import com.rednetty.redpractice.mechanic.player.economy.EconomyHandler;
-import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.player.PlayerHandler;
 import com.rednetty.redpractice.mechanic.player.bank.BankHandler;
+import com.rednetty.redpractice.mechanic.player.bossbar.BarHandler;
 import com.rednetty.redpractice.mechanic.player.chat.ChatHandler;
+import com.rednetty.redpractice.mechanic.player.damage.DamageHandler;
+import com.rednetty.redpractice.mechanic.player.economy.EconomyHandler;
+import com.rednetty.redpractice.mechanic.player.health.HealthHandler;
+import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
+import com.rednetty.redpractice.mechanic.world.spawners.SpawnerHandler;
 
 import java.util.stream.Stream;
 
@@ -15,6 +19,10 @@ public class MechanicManager {
     private ModerationHandler moderationHandler;
     private BankHandler bankHandler;
     private EconomyHandler economyHandler;
+    private BarHandler barHandler;
+    private HealthHandler healthHandler;
+    private DamageHandler damageHandler;
+    private SpawnerHandler spawnerHandler;
 
 
     /**
@@ -27,7 +35,11 @@ public class MechanicManager {
                 moderationHandler = new ModerationHandler(),
                 bankHandler = new BankHandler(),
                 chatHandler = new ChatHandler(),
-                economyHandler = new EconomyHandler()
+                economyHandler = new EconomyHandler(),
+                barHandler = new BarHandler(),
+                healthHandler = new HealthHandler(),
+                damageHandler = new DamageHandler(),
+                spawnerHandler = new SpawnerHandler()
         ).forEach(manager -> manager.onEnable());
     }
 
@@ -41,18 +53,30 @@ public class MechanicManager {
                 moderationHandler,
                 bankHandler,
                 chatHandler,
-                economyHandler
+                economyHandler,
+                barHandler,
+                healthHandler,
+                spawnerHandler,
+                damageHandler
         ).forEach(manager -> manager.onDisable());
     }
 
 
+
     /**
      * Get the Handlers
+     *
      * @return - Returns the Class of the Handlers
      */
 
+
+
     public BankHandler getBankHandler() {
         return bankHandler;
+    }
+
+    public HealthHandler getHealthHandler() {
+        return healthHandler;
     }
 
     public ChatHandler getChatHandler() {
@@ -69,5 +93,17 @@ public class MechanicManager {
 
     public EconomyHandler getEconomyHandler() {
         return economyHandler;
+    }
+
+    public BarHandler getBarHandler() {
+        return barHandler;
+    }
+
+    public DamageHandler getDamageHandler() {
+        return damageHandler;
+    }
+
+    public SpawnerHandler getSpawnerHandler() {
+        return spawnerHandler;
     }
 }

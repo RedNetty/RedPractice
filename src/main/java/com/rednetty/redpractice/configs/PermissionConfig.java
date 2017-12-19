@@ -20,7 +20,7 @@ public class PermissionConfig {
                 file.createNewFile();
             }
 
-        }catch(IOException e) {
+        } catch (IOException e) {
             Bukkit.broadcastMessage("Error: Could not Create Config 'permissions.yml'");
             e.printStackTrace();
         }
@@ -33,7 +33,7 @@ public class PermissionConfig {
             }
             fileConfig.options().copyDefaults(true);
             saveConfig();
-        }catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             Bukkit.broadcastMessage("Error: Could not Copy Defaults in the Config 'permissions.yml'");
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public class PermissionConfig {
     public static void saveConfig() {
         try {
             fileConfig.save(file);
-        }catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

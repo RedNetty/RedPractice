@@ -28,4 +28,5 @@ GM:
   prefix: '&b&lGM '
   inherits: PMOD
   permissions:
+  - practice.heal
   - practice.reload

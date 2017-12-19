@@ -9,18 +9,9 @@ import org.bukkit.entity.Player;
 public class StringUtil {
     private final static int CENTER_PX = 154;
 
-
-    public  String getFullMessage(String[] args, int start) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = start; i < args.length; i++) {
-            sb.append(args[i]).append(" ");
-        }
-
-        String allArgs = sb.toString().trim();
-        return allArgs;
+    public static String colorCode(String message) {
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
-
-
 
     public static void sendCenteredMessage(Player player, String message) {
         if (message == null || message.equals("")) player.sendMessage("");
@@ -53,6 +44,16 @@ public class StringUtil {
             compensated += spaceLength;
         }
         player.sendMessage(sb.toString() + message);
+    }
+
+    public String getFullMessage(String[] args, int start) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = start; i < args.length; i++) {
+            sb.append(args[i]).append(" ");
+        }
+
+        String allArgs = sb.toString().trim();
+        return allArgs;
     }
 
 }

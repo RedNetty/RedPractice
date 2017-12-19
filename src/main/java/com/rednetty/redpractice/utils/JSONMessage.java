@@ -11,7 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONArray;
 
-
 import java.util.List;
 
 public class JSONMessage {

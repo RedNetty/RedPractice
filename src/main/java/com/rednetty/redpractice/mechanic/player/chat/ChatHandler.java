@@ -3,8 +3,6 @@ package com.rednetty.redpractice.mechanic.player.chat;
 import com.rednetty.redpractice.RedPractice;
 import com.rednetty.redpractice.mechanic.MechanicManager;
 import com.rednetty.redpractice.mechanic.Mechanics;
-import com.rednetty.redpractice.mechanic.player.PlayerHandler;
-import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.utils.JSONMessage;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,10 +31,11 @@ public class ChatHandler extends Mechanics implements Listener {
 
     /**
      * Used to Combine all the Player Tags
+     *
      * @param player - The Player you are trying to get it for
      * @return - Returns the Prefixes/Tags
      */
-    public  String getFullTag(Player player) {
+    public String getFullTag(Player player) {
         MechanicManager mechanicManager = RedPractice.getMechanicManager();
         return mechanicManager.getModerationHandler().getNameTag(mechanicManager.getPlayerHandler().getGamePlayer(player).getPlayerRank());
     }
@@ -44,6 +43,7 @@ public class ChatHandler extends Mechanics implements Listener {
 
     /**
      * This is used when a player puts @i@ in his message, it will send a JSONMessage with the info of the Item Specified.
+     *
      * @param sender     - This would be the person sending the message originally
      * @param recipients - The Recipients of the message that should get this message
      * @param prefix     - Mainly used for Global ChatHandler this is so you can add a prefix to the message
@@ -55,15 +55,15 @@ public class ChatHandler extends Mechanics implements Listener {
             String[] splitMessage = message.split("@i@");
             String beforeItem = "";
             String afterItem = "";
-            if(splitMessage.length > 0)
+            if (splitMessage.length > 0)
                 beforeItem = splitMessage[0];
-            if(splitMessage.length > 1)
+            if (splitMessage.length > 1)
                 afterItem = splitMessage[1];
             /*Moves the Item Info onto the List*/
             List<String> itemString = new ArrayList<>();
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemString.add(itemMeta.hasDisplayName() ? itemMeta.getDisplayName() : itemStack.getType().name());
-            if(itemMeta.hasLore()) itemMeta.getLore().forEach(lore -> itemString.add(lore));
+            if (itemMeta.hasLore()) itemMeta.getLore().forEach(lore -> itemString.add(lore));
             /*Starts making the Json Message*/
             JSONMessage jsonMessage = new JSONMessage(ChatColor.translateAlternateColorCodes('&', prefix + ChatColor.GRAY + sender.getName() + ": "));
             jsonMessage.addText(beforeItem);
@@ -83,7 +83,7 @@ public class ChatHandler extends Mechanics implements Listener {
         player.getLocation().getWorld().getNearbyEntities(player.getLocation(), 20, 20, 20).forEach(entity -> {
             if (entity instanceof Player) event.getRecipients().add((Player) entity);
         });
-        String playerPrefix =  getFullTag(player);
+        String playerPrefix = getFullTag(player);
         if (event.getMessage().contains("@i@") && player.getInventory().getItemInMainHand().getType() != Material.AIR) { /*Used for Showing Items in ChatHandler*/
             sendShowMessage(player, event.getRecipients(), playerPrefix, event.getMessage(), event.getPlayer().getInventory().getItemInMainHand());
             event.setCancelled(true);
@@ -92,7 +92,7 @@ public class ChatHandler extends Mechanics implements Listener {
         }
 
         /*Nobody Heard You Alert (Used a Task because it would send before the message sometimes)*/
-        if(event.getRecipients().size() <= 1 && !event.isCancelled()) {
+        if (event.getRecipients().size() <= 1 && !event.isCancelled()) {
             player.sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC + "Nobody heard you..");
         }
     }
