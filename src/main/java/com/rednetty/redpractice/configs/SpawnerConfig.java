@@ -13,7 +13,7 @@ public class SpawnerConfig {
     private static File file;
 
 
-    public void setupConfig() {
+    public static void setupConfig() {
         file = new File(RedPractice.getInstance().getDataFolder(), "spawner.yml");
         try{
             if(!file.exists()) {

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.permissions.PermissionAttachment;
 
-public class GamePlayer {
+public class GamePlayer{
 
     private Player player;
     private int gemAmount;

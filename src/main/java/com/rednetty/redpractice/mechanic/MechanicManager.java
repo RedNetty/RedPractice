@@ -8,7 +8,7 @@ import com.rednetty.redpractice.mechanic.player.damage.DamageHandler;
 import com.rednetty.redpractice.mechanic.player.economy.EconomyHandler;
 import com.rednetty.redpractice.mechanic.player.health.HealthHandler;
 import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
-import com.rednetty.redpractice.mechanic.world.spawners.SpawnerHandler;
+import com.rednetty.redpractice.mechanic.world.entity.spawners.SpawnerHandler;
 
 import java.util.stream.Stream;
 
