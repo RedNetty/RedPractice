@@ -6,7 +6,6 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.rednetty.redpractice.RedPractice;
-import com.rednetty.redpractice.events.RankChangeEvent;
 import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.player.debug.DebugHandler;
 import com.rednetty.redpractice.utils.items.NBTEditor;
@@ -86,11 +85,12 @@ public class DamageHandler extends Mechanics implements Listener {
     }
 
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
 
-        if (event.isCancelled()) return;
-
+        if(event.isCancelled()) {
+            Bukkit.broadcastMessage("C");
+        }
 
         if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             event.setDamage(0);
@@ -107,7 +107,7 @@ public class DamageHandler extends Mechanics implements Listener {
                 DebugHandler debugHandler = RedPractice.getMechanicManager().getDebugHandler();
                 int damage = getRandomDamage(itemStack);
 
-                if(player instanceof Player && ((Player) player).getExp() <= 0.0F) {
+                if (player instanceof Player && ((Player) player).getExp() <= 0.0F) {
                     event.setCancelled(true);
                     return;
                 }
@@ -123,7 +123,7 @@ public class DamageHandler extends Mechanics implements Listener {
                 int armor = 0;
                 int dps = 0;
                 int thorns = 0;
-                if(livingEntity instanceof Player) {
+                if (livingEntity instanceof Player) {
                     for (ItemStack armoritem : ((Player) livingEntity).getInventory().getArmorContents()) {
                         if (hasStat(armoritem, "block")) {
                             block += getStat(armoritem, "block");
@@ -148,10 +148,10 @@ public class DamageHandler extends Mechanics implements Listener {
                 Bukkit.broadcastMessage(block + " block><dodge " + dodge + "><reflect " + reflect);
 
                 if (hasStat(itemStack, "accuracy")) {
-                    if(block > 0) {
+                    if (block > 0) {
                         block -= getStat(itemStack, "accuracy") * block / 100;
                     }
-                    if(dodge > 0) {
+                    if (dodge > 0) {
                         dodge -= getStat(itemStack, "accuracy") * dodge / 100;
                     }
                 }
@@ -163,18 +163,21 @@ public class DamageHandler extends Mechanics implements Listener {
                     livingEntity.getWorld().playSound(livingEntity.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1F, 1F);
                     event.setCancelled(true);
                     return;
-                }else if (dodge > dodgeChance && dodge > 0) {
+                }
+                if (dodge > dodgeChance && dodge > 0) {
                     debugHandler.sendDebugMessage(DebugHandler.DebugType.DODGE, player, livingEntity, damage);
                     livingEntity.getWorld().playSound(livingEntity.getLocation(), Sound.BLOCK_CLOTH_HIT, 1F, 1F);
                     livingEntity.getWorld().playEffect(livingEntity.getLocation(), Effect.EXPLOSION, 10);
                     event.setCancelled(true);
                     return;
-                }else if (reflect > reflectChance && reflect > 0) {
+                }
+                if (reflect > reflectChance && reflect > 0) {
                     debugHandler.sendDebugMessage(DebugHandler.DebugType.REFLECT, player, livingEntity, damage);
                     player.damage(damage);
                     event.setCancelled(true);
                     return;
-                }else if(thorns > 0) {
+                }
+                if (thorns > 0) {
                     livingEntity.getWorld().playEffect(livingEntity.getLocation(), Effect.STEP_SOUND, Material.LEAVES);
                     player.damage((thorns * damage / 100));
                     debugHandler.sendDebugMessage(DebugHandler.DebugType.THORNS, player, livingEntity, (thorns * damage / 100));
@@ -183,12 +186,12 @@ public class DamageHandler extends Mechanics implements Listener {
 
                 int armorPen = 0;
                 Location particleLocation = livingEntity.getEyeLocation();
-                if(player instanceof Player) {
+                if (player instanceof Player) {
 
-                    if(((Player) player).getInventory().getItemInMainHand().getType() == Material.GOLD_SPADE) { //Deals with Polearm AOE
+                    if (((Player) player).getInventory().getItemInMainHand().getType() == Material.GOLD_SPADE) { //Deals with Polearm AOE
                         for (Entity entity : livingEntity.getWorld().getNearbyEntities(livingEntity.getLocation(), 3, 3, 3)) {
-                            if(entity instanceof LivingEntity) {
-                                LivingEntity areaLE = (LivingEntity)entity;
+                            if (entity instanceof LivingEntity) {
+                                LivingEntity areaLE = (LivingEntity) entity;
                                 areaLE.damage(damage);
                                 areaLE.setVelocity(areaLE.getVelocity().multiply(-2).setY(+1));
                                 debugHandler.sendDamageDebug(areaLE, player, damage, 0, 0);
@@ -230,7 +233,7 @@ public class DamageHandler extends Mechanics implements Listener {
                 }
 
                 //After Damage Calculation Armor Calculations
-                if(hasStat(itemStack, "dps")) {
+                if (hasStat(itemStack, "dps")) {
                     damage += dps * damage / 100;
                 }
 
@@ -238,10 +241,8 @@ public class DamageHandler extends Mechanics implements Listener {
                 if (hasStat(itemStack, "armor")) {
                     damage -= finalArmor * damage / 100;
                 }
-
-
                 event.setDamage(damage);
-                debugHandler.sendDamageDebug(livingEntity, player, damage, finalArmor * damage / 100, finalArmor);
+                //debugHandler.sendDamageDebug(livingEntity, player, damage, finalArmor * damage / 100, finalArmor);
 
 
             }
@@ -251,8 +252,8 @@ public class DamageHandler extends Mechanics implements Listener {
 
     @EventHandler
     public void onTakeDamage(EntityDamageEvent event) {
-        if(event.getEntity() instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity)event.getEntity();
+        if (event.getEntity() instanceof LivingEntity) {
+            LivingEntity livingEntity = (LivingEntity) event.getEntity();
             livingEntity.setNoDamageTicks(0);
         }
     }

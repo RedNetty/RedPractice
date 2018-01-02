@@ -19,17 +19,19 @@ public class NBTEditor {
      * @return The future NBTAccesor.
      */
     public NBTEditor check() {
-        if (this.itemStack.hasTag()) return this;
+        if(this.itemStack != null ) {
+            if (this.itemStack.hasTag()) return this;
 
-        NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        this.itemStack.setTag(nbtTagCompound);
-
+            NBTTagCompound nbtTagCompound = new NBTTagCompound();
+            this.itemStack.setTag(nbtTagCompound);
+        }
         return this;
-
     }
 
     public void remove(String key) {
-        this.itemStack.getTag().remove(key);
+        if(this.itemStack != null ) {
+            this.itemStack.getTag().remove(key);
+        }
     }
 
     /**
@@ -38,7 +40,11 @@ public class NBTEditor {
      * @return Does it?
      */
     public boolean hasTag() {
-        return this.itemStack.hasTag();
+        if(this.itemStack != null ) {
+            return this.itemStack.hasTag();
+
+        }
+        return false;
     }
 
     /**
@@ -48,7 +54,10 @@ public class NBTEditor {
      * @return Probably I guess?
      */
     public boolean hasKey(String key) {
-        return this.itemStack.getTag().hasKey(key);
+        if(this.itemStack != null ) {
+            return this.itemStack.getTag().hasKey(key);
+        }
+        return false;
     }
 
     /**
@@ -58,9 +67,12 @@ public class NBTEditor {
      * @return Probably I guess?
      */
     public boolean hasValue(String key, Object value) {
-        if (!this.hasKey(key)) return false;
+        if(this.itemStack != null ) {
+            if (!this.hasKey(key)) return false;
 
-        return this.itemStack.getTag().get(key) == value;
+            return this.itemStack.getTag().get(key) == value;
+        }
+        return false;
     }
 
     /**
@@ -71,8 +83,9 @@ public class NBTEditor {
      * @return New NBTEditor.
      */
     public NBTEditor setString(String key, String value) {
-        this.itemStack.getTag().setString(key, value);
-
+        if(this.itemStack != null ) {
+            this.itemStack.getTag().setString(key, value);
+        }
         return this;
     }
 
@@ -84,7 +97,9 @@ public class NBTEditor {
      * @return New NBTEditor.
      */
     public NBTEditor setInt(String key, int value) {
-        this.itemStack.getTag().setInt(key, value);
+        if(this.itemStack != null ) {
+            this.itemStack.getTag().setInt(key, value);
+        }
 
         return this;
     }
@@ -97,7 +112,9 @@ public class NBTEditor {
      * @return New NBTEditor.
      */
     public NBTEditor setDouble(String key, double value) {
-        this.itemStack.getTag().setDouble(key, value);
+        if(this.itemStack != null ) {
+            this.itemStack.getTag().setDouble(key, value);
+        }
 
         return this;
     }
@@ -109,7 +126,11 @@ public class NBTEditor {
      * @return The value.
      */
     public String getString(String key) {
-        return this.itemStack.getTag().getString(key);
+
+        if(this.itemStack != null ) {
+            return this.itemStack.getTag().getString(key);
+        }
+        return "";
     }
 
     /**
@@ -119,7 +140,10 @@ public class NBTEditor {
      * @return The value.
      */
     public int getInteger(String key) {
-        return this.itemStack.getTag().getInt(key);
+        if(this.itemStack != null ) {
+            return this.itemStack.getTag().getInt(key);
+        }
+        return 0;
     }
 
     /**
@@ -128,6 +152,10 @@ public class NBTEditor {
      * @return The new itemstack.
      */
     public ItemStack update() {
-        return CraftItemStack.asBukkitCopy(this.itemStack);
+
+        if(this.itemStack != null ) {
+            return CraftItemStack.asBukkitCopy(this.itemStack);
+        }
+        return null;
     }
 }

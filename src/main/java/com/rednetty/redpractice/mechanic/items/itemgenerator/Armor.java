@@ -2,6 +2,7 @@ package com.rednetty.redpractice.mechanic.items.itemgenerator;
 
 import com.rednetty.redpractice.utils.items.NBTEditor;
 import com.rednetty.redpractice.utils.strings.StringUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -79,7 +80,9 @@ public class Armor {
         nbtEditor.setInt("dex", dex);
         nbtEditor.setInt("int", intelect);
         nbtEditor.setInt("dodge", dodge);
+        Bukkit.broadcastMessage(dodge + " DODGE");
         nbtEditor.setInt("block", block);
+        Bukkit.broadcastMessage(block + " bloke");
         nbtEditor.setString("rarity", itemRarity.name());
         itemStack = nbtEditor.update();
     }
@@ -99,18 +102,28 @@ public class Armor {
         if (hps > 0) {
             loreList.add("&cHP REGEN: +" + hps + " HP/s");
         }
-        TreeMap<Integer, String> itemStats = new TreeMap<>(Collections.reverseOrder());
-
-        itemStats.put(thorns, "&cTHORNS: " + thorns + "% DMG");
-        itemStats.put(vit, "&cVIT: +" + vit);
-        itemStats.put(str, "&cSTR: +" + str);
-        itemStats.put(intelect, "&cINT: +" + intelect);
-        itemStats.put(dex, "&cDEX: +" + dex);
-        itemStats.put(dodge, "&cDODGE: " + dodge + "%");
-        itemStats.put(block, "&cBLOCK: " + block + "%");
-        itemStats.put(0, itemRarity.getName()); //THIS NEEDS TO BE LAST!
-
-        loreList.addAll(itemStats.values());
+        if(thorns > 0) {
+            loreList.add("&cTHORNS: " + thorns + "% DMG");
+        }
+        if(vit > 0) {
+            loreList.add("&cVIT: +" + vit);
+        }
+        if(str > 0) {
+            loreList.add("&cSTR: +" + str);
+        }
+        if(intelect > 0) {
+            loreList.add("&cINT: +" + intelect);
+        }
+        if(dex > 0) {
+            loreList.add("&cDEX: +" + dex);
+        }
+        if(dodge > 0) {
+            loreList.add("&cDODGE: " + dodge + "%");
+        }
+        if(block > 0) {
+            loreList.add("&cBLOCK: " + block + "%");
+        }
+        loreList.add(itemRarity.getName()); //THIS NEEDS TO BE LAST!
         return loreList.stream().map(StringUtil::colorCode).collect(Collectors.toList());
     }
 

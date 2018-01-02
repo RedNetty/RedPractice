@@ -85,21 +85,36 @@ public class Weapon {
         List<String> loreList = new ArrayList<>();
 
         loreList.add("&cDMG: " + mindmg + " - " + maxdmg);
-        TreeMap<Integer, String> itemStats = new TreeMap<>(Collections.reverseOrder());
 
-        itemStats.put(fire, "&cFIRE DMG: +" + fire);
-        itemStats.put(poison, "&cPOISON DMG: +" + poison);
-        itemStats.put(ice, "&cICE DMG: +" + ice);
-        itemStats.put(pure, "&cPURE DMG: +" + pure);
-        itemStats.put(blind, "&cBLIND: " + blind + "%");
-        itemStats.put(lifesteal, "&cLIFE STEAL: " + lifesteal + "%");
-        itemStats.put(vsplayers, "&cvs. PLAYERS: +" + vsplayers + "%");
-        itemStats.put(armorpen, "&cARMOR PENETRATION: " + armorpen + "%");
-        itemStats.put(accuracy, "&cACCURACY: " + accuracy + "%");
-        itemStats.put(0, itemRarity.getName()); //THIS NEEDS TO BE LAST!
+        if(fire > 0) {
+            loreList.add("&cFIRE DMG: +" + fire);
+        }
+        if(poison > 0) {
+            loreList.add("&cPOISON DMG: +" + poison);
+        }
+        if(ice > 0) {
+            loreList.add("&cICE DMG: +" + ice);
+        }
+        if(pure > 0) {
+            loreList.add("&cPURE DMG: +" + pure);
+        }
+        if(blind > 0) {
+            loreList.add("&cBLIND: " + blind + "%");
+        }
+        if(lifesteal > 0) {
+            loreList.add("&cLIFE STEAL: " + lifesteal + "%");
+        }
+        if(vsplayers > 0) {
+            loreList.add("&cvs. PLAYERS: +" + vsplayers + "%");
+        }
+        if(armorpen > 0) {
+            loreList.add("&cARMOR PENETRATION: " + armorpen + "%");
+        }
+        if(accuracy > 0) {
+            loreList.add("&cACCURACY: " + accuracy + "%");
+        }
+        loreList.add(itemRarity.getName()); //THIS NEEDS TO BE LAST!
 
-
-        loreList.addAll(itemStats.values());
         return loreList.stream().map(StringUtil::colorCode).collect(Collectors.toList());
     }
 
