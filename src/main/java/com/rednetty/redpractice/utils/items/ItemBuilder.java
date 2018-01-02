@@ -11,12 +11,12 @@ import java.util.List;
 public class ItemBuilder {
 
 
-    public List<String> lore;
-    public String name;
-    public Material material;
-    public ItemStack item = null;
-    public int amount = 1;
-    public short durability;
+    private List<String> lore;
+    private String name;
+    private Material material;
+    private ItemStack item = null;
+    private int amount = 1;
+    private short durability;
 
 
     /**

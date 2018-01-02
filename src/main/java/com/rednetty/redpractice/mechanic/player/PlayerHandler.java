@@ -7,6 +7,7 @@ import com.rednetty.redpractice.mechanic.Mechanics;
 import com.rednetty.redpractice.mechanic.items.itemgenerator.Armor;
 import com.rednetty.redpractice.mechanic.items.itemgenerator.ItemRarity;
 import com.rednetty.redpractice.mechanic.items.itemgenerator.Weapon;
+import com.rednetty.redpractice.utils.strings.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -14,6 +15,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -144,6 +147,15 @@ public class PlayerHandler extends Mechanics implements Listener {
         player.setMaxHealth(RedPractice.getMechanicManager().getHealthHandler().getMaxHealth(player.getInventory().getArmorContents()));
         player.setHealthScale(20);
         player.setHealthScaled(true);
+
+
+        //BETA MESSAGE
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                getGamePlayer(player).openMenu(new BetaMenu(getGamePlayer(player)));
+            }
+        }.runTaskLaterAsynchronously(RedPractice.getInstance(), 3L);
 
 
         //TEST

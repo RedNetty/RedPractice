@@ -65,15 +65,18 @@ public class SpawnerHandler extends Mechanics{
 
     public void spawnMob(Location location, EntityType entityType, int tier) {
         LivingEntity livingEntity = (LivingEntity) location.getWorld().spawnEntity(location, entityType);
-        String mobName = StringUtil.colorCode("&eLegendary " + livingEntity.getName());
+        String mobName = StringUtil.colorCode("&eInfernal " + livingEntity.getName());
 
         livingEntity.getEquipment().clear();
         ThreadLocalRandom random = ThreadLocalRandom.current();
-        int bootRarity = random.nextInt(ItemRarity.values().length);
-        int legsRarity = random.nextInt(ItemRarity.values().length);
-        int chestRarity = random.nextInt(ItemRarity.values().length);
-        int helmetRarity = random.nextInt(ItemRarity.values().length);
+        int bootRarity = random.nextInt(ItemRarity.values().length + 1);
+        int legsRarity = random.nextInt(ItemRarity.values().length + 1);
+        int chestRarity = random.nextInt(ItemRarity.values().length + 1);
+        int helmetRarity = random.nextInt(ItemRarity.values().length + 1);
+        int weaponType = random.nextInt(5);
+        int weaponRarity = random.nextInt(ItemRarity.values().length + 1);
 
+        livingEntity.getEquipment().setItemInMainHand(ItemRandomizer.ranomizeStats(ItemRandomizer.randomMainStat(ItemType.fromInt(weaponType), 5, ItemRarity.fromInt(weaponRarity))));
         livingEntity.getEquipment().setBoots(ItemRandomizer.ranomizeStats(ItemRandomizer.randomMainStat(ItemType.BOOTS, 5, ItemRarity.fromInt(bootRarity))));
         livingEntity.getEquipment().setLeggings(ItemRandomizer.ranomizeStats(ItemRandomizer.randomMainStat(ItemType.LEGS, 5, ItemRarity.fromInt(legsRarity))));
         livingEntity.getEquipment().setChestplate(ItemRandomizer.ranomizeStats(ItemRandomizer.randomMainStat(ItemType.CHEST, 5, ItemRarity.fromInt(chestRarity))));

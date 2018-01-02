@@ -1,6 +1,7 @@
 package com.rednetty.redpractice.utils.strings;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 /**
@@ -13,8 +14,8 @@ public class StringUtil {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public static void sendCenteredMessage(Player player, String message) {
-        if (message == null || message.equals("")) player.sendMessage("");
+    public static void sendCenteredMessage(LivingEntity livingEntity, String message) {
+        if (message == null || message.equals("")) livingEntity.sendMessage("");
         message = ChatColor.translateAlternateColorCodes('&', message);
 
         int messagePxSize = 0;
@@ -43,7 +44,7 @@ public class StringUtil {
             sb.append(" ");
             compensated += spaceLength;
         }
-        player.sendMessage(sb.toString() + message);
+        livingEntity.sendMessage(sb.toString() + message);
     }
 
     public String getFullMessage(String[] args, int start) {

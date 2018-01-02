@@ -111,7 +111,6 @@ public class Armor {
         itemStats.put(0, itemRarity.getName()); //THIS NEEDS TO BE LAST!
 
         loreList.addAll(itemStats.values());
-        loreList.add(itemRarity.getName());
         return loreList.stream().map(StringUtil::colorCode).collect(Collectors.toList());
     }
 

@@ -1,6 +1,7 @@
 package com.rednetty.redpractice.mechanic.items;
 
 
+import com.rednetty.redpractice.mechanic.items.itemgenerator.ItemRarity;
 import org.bukkit.Material;
 
 public enum ItemType {
@@ -22,5 +23,14 @@ public enum ItemType {
 
     public Material getMaterial() {
         return material;
+    }
+
+    public static ItemType fromInt(int count) {
+        for(ItemType itemType : ItemType.values()) {
+            if(itemType.ordinal() == count) {
+                return itemType;
+            }
+        }
+        return ItemType.SWORD;
     }
 }

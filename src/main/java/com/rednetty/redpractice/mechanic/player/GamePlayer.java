@@ -1,5 +1,6 @@
 package com.rednetty.redpractice.mechanic.player;
 
+import com.rednetty.redpractice.utils.menu.Menu;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -13,7 +14,9 @@ public class GamePlayer{
     private int bankSize;
     private String playerRank;
     private PermissionAttachment permissions;
+    private Menu openMenu;
     private BossBar bossBar;
+
 
 
     /**
@@ -127,4 +130,45 @@ public class GamePlayer{
     }
 
 
+    /**
+     * Open a menu for the player
+     *
+     * @param openMenu The menu to open
+     */
+    public void openMenu(Menu openMenu) {
+
+        if (viewingMenu())
+            closeMenu(true);
+
+        this.openMenu = openMenu;
+        this.openMenu.getViewers().add(this);
+        this.openMenu.onOpen(this);
+        getPlayer().openInventory(openMenu.getInventory());
+    }
+
+    /**
+     * Close the currently opened menu of the player
+     */
+    public void closeMenu(boolean closeBukkitInv) {
+        if (!viewingMenu()) return;
+        openMenu.getViewers().remove(this);
+        openMenu.onClose(this);
+        if (closeBukkitInv)
+            getPlayer().closeInventory();
+        openMenu = null;
+    }
+
+    /**
+     * Get the currently opened menu of the player
+     *
+     * @return Menu
+     */
+    public Menu getOpenMenu() {
+        return openMenu;
+    }
+
+
+    public boolean viewingMenu() {
+        return openMenu != null;
+    }
 }

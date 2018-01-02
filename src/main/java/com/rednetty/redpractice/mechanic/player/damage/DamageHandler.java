@@ -6,15 +6,16 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.rednetty.redpractice.RedPractice;
+import com.rednetty.redpractice.events.RankChangeEvent;
 import com.rednetty.redpractice.mechanic.Mechanics;
+import com.rednetty.redpractice.mechanic.player.debug.DebugHandler;
 import com.rednetty.redpractice.utils.items.NBTEditor;
-import org.bukkit.Effect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -22,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DamageHandler extends Mechanics implements Listener {
@@ -84,10 +86,11 @@ public class DamageHandler extends Mechanics implements Listener {
     }
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onDamage(EntityDamageByEntityEvent event) {
 
         if (event.isCancelled()) return;
+
 
         if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
             event.setDamage(0);
@@ -101,13 +104,19 @@ public class DamageHandler extends Mechanics implements Listener {
                 player.setNoDamageTicks(0);
                 livingEntity.setNoDamageTicks(0);
                 ItemStack itemStack = player.getEquipment().getItemInMainHand();
+                DebugHandler debugHandler = RedPractice.getMechanicManager().getDebugHandler();
                 int damage = getRandomDamage(itemStack);
 
+                if(player instanceof Player && ((Player) player).getExp() <= 0.0F) {
+                    event.setCancelled(true);
+                    return;
+                }
 
+                Random random = new Random();
                 //ARMOR CALCULATIONS (MOST OF THEM)
-                int blockChance = ThreadLocalRandom.current().nextInt(100) + 1;
-                int dodgeChance = ThreadLocalRandom.current().nextInt(100) + 1;
-                int reflectChance = ThreadLocalRandom.current().nextInt(100) + 1;
+                int blockChance = random.nextInt(120) + 1;
+                int dodgeChance = random.nextInt(120) + 1;
+                int reflectChance = random.nextInt(120) + 1;
                 int block = 0;
                 int dodge = 0;
                 int reflect = 0;
@@ -136,40 +145,57 @@ public class DamageHandler extends Mechanics implements Listener {
                         }
                     }
                 }
+                Bukkit.broadcastMessage(block + " block><dodge " + dodge + "><reflect " + reflect);
 
                 if (hasStat(itemStack, "accuracy")) {
-                    block -= getStat(itemStack, "accuracy") * block / 100;
-                    dodge -= getStat(itemStack, "accuracy") * dodge / 100;
+                    if(block > 0) {
+                        block -= getStat(itemStack, "accuracy") * block / 100;
+                    }
+                    if(dodge > 0) {
+                        dodge -= getStat(itemStack, "accuracy") * dodge / 100;
+                    }
                 }
 
-                if (block >= blockChance) {
-                    //TODO: Add Debug Message Here
+                Bukkit.broadcastMessage(block + " block><dodge " + dodge + "><reflect " + reflect);
+
+                if (block > blockChance && block > 0) {
+                    debugHandler.sendDebugMessage(DebugHandler.DebugType.BLOCK, player, livingEntity, damage);
                     livingEntity.getWorld().playSound(livingEntity.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1F, 1F);
                     event.setCancelled(true);
                     return;
-                }
-                if (dodge >= dodgeChance) {
-                    //TODO: Add Debug Message here http://prntscr.com/ho6nza
+                }else if (dodge > dodgeChance && dodge > 0) {
+                    debugHandler.sendDebugMessage(DebugHandler.DebugType.DODGE, player, livingEntity, damage);
                     livingEntity.getWorld().playSound(livingEntity.getLocation(), Sound.BLOCK_CLOTH_HIT, 1F, 1F);
                     livingEntity.getWorld().playEffect(livingEntity.getLocation(), Effect.EXPLOSION, 10);
                     event.setCancelled(true);
                     return;
-                }
-                if (reflect >= reflectChance) {
-                    //TODO: Add Damage Debug Message here
+                }else if (reflect > reflectChance && reflect > 0) {
+                    debugHandler.sendDebugMessage(DebugHandler.DebugType.REFLECT, player, livingEntity, damage);
                     player.damage(damage);
                     event.setCancelled(true);
                     return;
-                }
-                if(thorns > 0) {
+                }else if(thorns > 0) {
                     livingEntity.getWorld().playEffect(livingEntity.getLocation(), Effect.STEP_SOUND, Material.LEAVES);
                     player.damage((thorns * damage / 100));
+                    debugHandler.sendDebugMessage(DebugHandler.DebugType.THORNS, player, livingEntity, (thorns * damage / 100));
                 }
-
+                Bukkit.broadcastMessage(block + " block><dodge " + dodge + "><reflect " + reflect);
 
                 int armorPen = 0;
                 Location particleLocation = livingEntity.getEyeLocation();
                 if(player instanceof Player) {
+
+                    if(((Player) player).getInventory().getItemInMainHand().getType() == Material.GOLD_SPADE) { //Deals with Polearm AOE
+                        for (Entity entity : livingEntity.getWorld().getNearbyEntities(livingEntity.getLocation(), 3, 3, 3)) {
+                            if(entity instanceof LivingEntity) {
+                                LivingEntity areaLE = (LivingEntity)entity;
+                                areaLE.damage(damage);
+                                areaLE.setVelocity(areaLE.getVelocity().multiply(-2).setY(+1));
+                                debugHandler.sendDamageDebug(areaLE, player, damage, 0, 0);
+                            }
+                        }
+                    }
+
                     //WEAPON CALCULATIONS (MOST OF THEM)
                     if (hasStat(itemStack, "vsplayers") && livingEntity instanceof Player) {
                         damage += getStat(itemStack, "vsplayers");
@@ -207,16 +233,15 @@ public class DamageHandler extends Mechanics implements Listener {
                 if(hasStat(itemStack, "dps")) {
                     damage += dps * damage / 100;
                 }
+
+                int finalArmor = armor - (armorPen * armor / 100);
                 if (hasStat(itemStack, "armor")) {
-                    //TODO: DEBUG MESSAGE FOR LE
-                    int finalArmor = armor - (armorPen * armor / 100);
                     damage -= finalArmor * damage / 100;
                 }
 
 
                 event.setDamage(damage);
-                //TODO: ADD DEBUG MESSAGE
-                player.sendMessage(damage + " -> " + event.getEntity().getName() + " - HP: " + ((LivingEntity) event.getEntity()).getHealth());
+                debugHandler.sendDamageDebug(livingEntity, player, damage, finalArmor * damage / 100, finalArmor);
 
 
             }

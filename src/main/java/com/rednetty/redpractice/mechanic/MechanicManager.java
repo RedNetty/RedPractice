@@ -5,8 +5,11 @@ import com.rednetty.redpractice.mechanic.player.bank.BankHandler;
 import com.rednetty.redpractice.mechanic.player.bossbar.BarHandler;
 import com.rednetty.redpractice.mechanic.player.chat.ChatHandler;
 import com.rednetty.redpractice.mechanic.player.damage.DamageHandler;
+import com.rednetty.redpractice.mechanic.player.debug.DebugHandler;
 import com.rednetty.redpractice.mechanic.player.economy.EconomyHandler;
+import com.rednetty.redpractice.mechanic.player.energy.EnergyHandler;
 import com.rednetty.redpractice.mechanic.player.health.HealthHandler;
+import com.rednetty.redpractice.mechanic.server.menu.MenuHandler;
 import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.world.entity.spawners.SpawnerHandler;
 
@@ -23,6 +26,9 @@ public class MechanicManager {
     private HealthHandler healthHandler;
     private DamageHandler damageHandler;
     private SpawnerHandler spawnerHandler;
+    private EnergyHandler energyHandler;
+    private MenuHandler menuHandler;
+    private DebugHandler debugHandler;
 
 
     /**
@@ -39,6 +45,9 @@ public class MechanicManager {
                 barHandler = new BarHandler(),
                 healthHandler = new HealthHandler(),
                 damageHandler = new DamageHandler(),
+                energyHandler = new EnergyHandler(),
+                menuHandler = new MenuHandler(),
+                debugHandler = new DebugHandler(),
                 spawnerHandler = new SpawnerHandler()
         ).forEach(manager -> manager.onEnable());
     }
@@ -57,10 +66,12 @@ public class MechanicManager {
                 barHandler,
                 healthHandler,
                 spawnerHandler,
+                energyHandler,
+                menuHandler,
+                debugHandler,
                 damageHandler
         ).forEach(manager -> manager.onDisable());
     }
-
 
 
     /**
@@ -69,7 +80,13 @@ public class MechanicManager {
      * @return - Returns the Class of the Handlers
      */
 
+    public DebugHandler getDebugHandler() {
+        return debugHandler;
+    }
 
+    public EnergyHandler getEnergyHandler() {
+        return energyHandler;
+    }
 
     public BankHandler getBankHandler() {
         return bankHandler;
