@@ -9,6 +9,7 @@ import com.rednetty.redpractice.mechanic.player.debug.DebugHandler;
 import com.rednetty.redpractice.mechanic.player.economy.EconomyHandler;
 import com.rednetty.redpractice.mechanic.player.energy.EnergyHandler;
 import com.rednetty.redpractice.mechanic.player.health.HealthHandler;
+import com.rednetty.redpractice.mechanic.player.toggles.ToggleHandler;
 import com.rednetty.redpractice.mechanic.server.menu.MenuHandler;
 import com.rednetty.redpractice.mechanic.server.moderation.ModerationHandler;
 import com.rednetty.redpractice.mechanic.world.entity.spawners.SpawnerHandler;
@@ -29,7 +30,7 @@ public class MechanicManager {
     private EnergyHandler energyHandler;
     private MenuHandler menuHandler;
     private DebugHandler debugHandler;
-
+    private ToggleHandler toggleHandler;
 
     /**
      * This is used to load all the mechanics place a mechanic here and its onEnable will be called
@@ -48,6 +49,7 @@ public class MechanicManager {
                 energyHandler = new EnergyHandler(),
                 menuHandler = new MenuHandler(),
                 debugHandler = new DebugHandler(),
+                toggleHandler = new ToggleHandler(),
                 spawnerHandler = new SpawnerHandler()
         ).forEach(manager -> manager.onEnable());
     }
@@ -69,6 +71,7 @@ public class MechanicManager {
                 energyHandler,
                 menuHandler,
                 debugHandler,
+                toggleHandler,
                 damageHandler
         ).forEach(manager -> manager.onDisable());
     }
@@ -108,6 +111,9 @@ public class MechanicManager {
         return playerHandler;
     }
 
+    public ToggleHandler getToggleHandler() {
+        return toggleHandler;
+    }
     public EconomyHandler getEconomyHandler() {
         return economyHandler;
     }

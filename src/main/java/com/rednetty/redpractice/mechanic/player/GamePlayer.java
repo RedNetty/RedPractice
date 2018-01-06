@@ -1,10 +1,13 @@
 package com.rednetty.redpractice.mechanic.player;
 
+import com.rednetty.redpractice.mechanic.player.toggles.ToggleType;
 import com.rednetty.redpractice.utils.menu.Menu;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.permissions.PermissionAttachment;
+
+import java.util.List;
 
 public class GamePlayer{
 
@@ -16,6 +19,7 @@ public class GamePlayer{
     private PermissionAttachment permissions;
     private Menu openMenu;
     private BossBar bossBar;
+    private List<ToggleType> toggleList;
 
 
 
@@ -167,6 +171,13 @@ public class GamePlayer{
         return openMenu;
     }
 
+    public List<ToggleType> getToggleList() {
+        return toggleList;
+    }
+
+    public void setToggleList(List<ToggleType> toggleList) {
+        this.toggleList = toggleList;
+    }
 
     public boolean viewingMenu() {
         return openMenu != null;

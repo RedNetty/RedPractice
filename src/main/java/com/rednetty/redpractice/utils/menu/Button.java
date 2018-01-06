@@ -47,5 +47,5 @@ public abstract class Button {
         return menu;
     }
 
-    protected abstract void onClick(GamePlayer gamePlayer);
+    protected abstract void onClick(int slot, GamePlayer gamePlayer);
 }

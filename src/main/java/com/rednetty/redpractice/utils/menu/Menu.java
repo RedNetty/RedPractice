@@ -79,6 +79,11 @@ public abstract class Menu {
         return this;
     }
 
+    public Menu plainSet(int slot, ItemStack itemStack) {
+        inventory.setItem(slot, itemStack);
+        return this;
+    }
+
     public String getName() {
         return name;
     }
@@ -134,7 +139,7 @@ public abstract class Menu {
         if (buttonMap.containsKey(slot)) {
             Button button = buttonMap.get(slot);
             event.setCancelled(button.isLocked());
-            button.onClick(player);
+            button.onClick(slot, player);
         }
     }
 
