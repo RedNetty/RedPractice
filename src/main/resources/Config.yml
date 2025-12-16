@@ -1,0 +1,12 @@
+#The servers name all around the plugin (No Need to put the text in Brackets as it will do that for what is needed)
+Server Name: '&cRed Practice'
+
+#The Drop Rates for the Server
+#If you understand what a Float is it is a float of 1.000
+#The number will be if it is below or equal it will drop (1.000)
+Drop Rates:
+  T1: 0.500
+  T2: 0.230
+  T3: 0.120
+  T4: 0.080
+  T5: 0.020

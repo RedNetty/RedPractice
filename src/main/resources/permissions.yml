@@ -1,0 +1,32 @@
+Default:
+  prefix: '&6'
+  inherits: ''
+  permissions:
+  - practice.globalchat
+Sub:
+  prefix: '&a&lS '
+  inherits: Default
+  permissions: ''
+Sub+:
+  prefix: '6&lS+ '
+  inherits: Sub
+  permissions: ''
+Sub++:
+  prefix: '&3&lS++ '
+  inherits: Sub+
+  permissions: ''
+Supporter:
+  prefix: '&d&lSUPPORTER '
+  inherits: Sub++
+  permissions: ''
+PMOD:
+  prefix: '&f&lPMOD '
+  inherits: Supporter
+  permissions:
+  - practice.setrank
+GM:
+  prefix: '&b&lGM '
+  inherits: PMOD
+  permissions:
+  - practice.heal
+  - practice.reload

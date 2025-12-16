@@ -1,0 +1,17 @@
+name: RedPractice
+author: RedNetty
+main: com.rednetty.redpractice.RedPractice
+version: 1.0
+
+commands:
+  practicereload:
+    permission: practice.reload
+  setrank:
+    permission: practice.setrank
+  gl:
+    aliases: <global>
+    permission: practice.globalchat
+  heal:
+    permission: practice.heal
+  spawnmob:
+  randomgear:
